@@ -2,7 +2,8 @@
   <v-container class="fill-height">
     <v-responsive
       class="align-centerfill-height mx-auto"
-      max-width="900"
+      min-width="720"
+      max-width="2048"
     >
       <div class="header">
         <div class="text-center text-h5 font-weight-light mb-n1">Input your data</div>
@@ -88,6 +89,18 @@
             class="mr-3"
           ></v-text-field>
 
+          <v-text-field
+            v-model="width"
+            label="Width (px)"
+            variant="outlined"
+            hide-details
+            required
+            clearable
+            density="compact"
+            style="max-width: 200px;"
+            class="mr-3"
+          ></v-text-field>
+
           <v-btn
               v-on:click="addRow"
               dark
@@ -122,10 +135,9 @@
           </v-btn>
         </v-col>
 
-        <br/>
         <div id="chart"></div>
 
-    </v-responsive>
+      </v-responsive>
   </v-container>
 </template>
 
@@ -139,9 +151,8 @@ export default {
 
     // input fields
     const title = ref('Timeline');
-
     const height = ref('400');
-
+    const width = ref('900');
     const inputRows = ref([
       {
         name: '',
@@ -150,6 +161,7 @@ export default {
       }
     ])
 
+    // rows
     const addRow = () => {
       inputRows.value.push({
         name: '',
@@ -187,7 +199,7 @@ export default {
     }
 
     const allFieldsFilled = computed(() => {
-      return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value);
+      return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
     })
 
     // chart
@@ -198,12 +210,21 @@ export default {
 
     function updateChartSeries() {
       let data = inputRows.value.map(row => {
-        const startTime = new Date(`01.${row.startTime}`);
-        const endTime = new Date(`01.${row.endTime}`);
+        // split start and end time
+        const [startMonth, startYear] = row.startTime.split('.');
+        const [endMonth, endYear] = row.endTime.split('.');
+        
+        // re-format style
+        const startTimeFull = `${startYear}-${startMonth}-01`;
+        const endTimeFull = `${endYear}-${endMonth}-01`;
+
+        // create a date object
+        const startTimeDate = new Date(startTimeFull);
+        const endTimeDate = new Date(endTimeFull);
 
         return {
           x: row.name,
-          y: [startTime.getTime(), endTime.getTime()]
+          y: [startTimeDate.getTime(), endTimeDate.getTime()]
         };
       });
 
@@ -214,16 +235,15 @@ export default {
         }
       ]);
 
-      chart.value.updateOptions({
-        
+      chart.value.updateOptions({        
         title: {
           text: title.value
         },
         chart: {
-          height: height.value
+          height: height.value,
+          width: width.value
         }
       });
-      console.log('height' + height.value);
     }
 
     let options = {
@@ -239,12 +259,14 @@ export default {
       },
       chart: {
         height: '400px',
+        width: '900px',
+        responsive: true,
         type: 'rangeBar',
         toolbar: {
-          show: false,
+          show: true,
         },
         zoom: {
-          enabled: false,
+          enabled: true,
       },
         background: 'white'
       },
@@ -264,7 +286,7 @@ export default {
         },
       grid: {
         row: {
-          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          colors: ["#f3f3f3", "transparent"], 
           opacity: 0.5
         }
       },
@@ -293,6 +315,7 @@ export default {
       inputRows,
       title,
       height,
+      width,
       addRow,
       removeRows,
       allFieldsFilled,
@@ -307,17 +330,14 @@ export default {
 </script>
 
 <style>
-/* don't use scoped css */
 
-.theme--light.v-text-field>.v-input__control>.v-input__slot:before {
-    border-color: #90C143;
+#chart {
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.theme--light.v-label {
-    color: #90C143;
-}
-
-.theme--light.v-input:not(.v-input--is-disabled) input, .theme--light.v-input:not(.v-input--is-disabled) textarea {
-    color: #90C143;
-}
 </style>
