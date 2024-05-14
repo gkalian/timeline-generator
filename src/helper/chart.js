@@ -12,6 +12,7 @@ export const loadChart = (options) => {
 };
 
 export const updateChartSeries = (inputRows, title, height, width) => {
+    //console.log('inputRows: ', inputRows.value, ', title: ', title.value, ', height: ', height.value, ', width: ', width.value);
     let data = inputRows.value.map(row => {
     const [startMonth, startYear] = row.startTime.split('.');
     const [endMonth, endYear] = row.endTime.split('.');

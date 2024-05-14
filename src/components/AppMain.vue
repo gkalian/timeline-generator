@@ -151,7 +151,7 @@
         <v-row class="generate-button"> 
           <v-col class="d-flex justify-center">
             <v-btn
-                v-on:click="updateChartSeries"
+                v-on:click="generateChart"
                 title="Generate chart"
                 dark
                 bottom
@@ -203,7 +203,6 @@ export default {
       }
     };
 
-    // clear all
     const clearAll = () => {
       inputRows.value.splice(1);
       inputRows.value[0] = {
@@ -248,9 +247,10 @@ export default {
       return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
     })
 
-    // local storage
+    // methods
     const saveRows = () => saveInputRows(inputRows.value);
     const loadRows = () => loadInputRows(inputRows);
+    const generateChart = () => updateChartSeries(inputRows, title, height, width);
 
     onMounted(loadRows);
 
@@ -269,9 +269,9 @@ export default {
       uploadData,
       allFieldsFilled,
       rules,
-      updateChartSeries,
       updateStartTime,
       updateEndTime,
+      generateChart
     }
   }
 }
