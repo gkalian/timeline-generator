@@ -20,7 +20,7 @@ A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vu
 
 ### Build 
 
-![NPE](https://img.shields.io/badge/by-gkalian-purple?style=for-the-badge&&logoColor=white)
+![ME](https://img.shields.io/badge/by-gkalian-purple?style=for-the-badge&&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF)
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
@@ -32,8 +32,15 @@ A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vu
 
 ## Changelog
 
+v1.3
+  - updated package.json
+  - extracted some functions (working with local storage and upload data) into separate js file
+  - update all libs and dependencies
+
+v1.2
+  - **feature**: possibility to upload .csv with data
+
 v1.1
-  - added width button
   - correct date formatting
   - update chart style
 
