@@ -10,14 +10,13 @@
         <br/>
       </div>
 
-      <v-container class = "input-fields">        
-        <v-row v-for="(row, index) in inputRows" :key="index" dense>
+        <v-row class="main-input-fields" v-for="(row, index) in inputRows" :key="index" dense>
           <v-col class="pr-3">
             <v-text-field
               v-model="row.name"
               :rules="[rules.required]"
               label="Name"
-              variant="solo"
+              variant="outlined"
               required
               clearable
             ></v-text-field>
@@ -30,7 +29,7 @@
                   v-model="row.startTime"
                   :rules="[rules.dateFormatRule]"
                   label="Start time"
-                  variant="solo"
+                  variant="outlined"
                   required
                   clearable
                 >
@@ -49,7 +48,7 @@
                   v-model="row.endTime"
                   :rules="[rules.dateFormatRule]"
                   label="End time"
-                  variant="solo"
+                  variant="outlined"
                   required
                   clearable
                 >
@@ -63,110 +62,138 @@
           </v-col>
         </v-row>
 
+        <v-row class="optional-elements" >
+          <v-col class="d-flex align-center justify-left">
+            <v-text-field
+              v-model="title"
+              label="Title"
+              variant="outlined"
+              hide-details
+              required
+              clearable
+              density="compact"
+              style="max-width: 200px;"
+              class="mr-3"
+            ></v-text-field>
 
-        <v-col class="d-flex align-center justify-end">
-          <v-text-field
-            v-model="title"
-            label="Title"
-            variant="outlined"
-            hide-details
-            required
-            clearable
-            density="compact"
-            style="max-width: 200px;"
-            class="mr-3"
-          ></v-text-field>
+            <v-text-field
+              v-model="height"
+              label="Height (px)"
+              variant="outlined"
+              hide-details
+              required
+              clearable
+              density="compact"
+              style="max-width: 200px;"
+              class="mr-3"
+            ></v-text-field>
 
-          <v-text-field
-            v-model="height"
-            label="Height (px)"
-            variant="outlined"
-            hide-details
-            required
-            clearable
-            density="compact"
-            style="max-width: 200px;"
-            class="mr-3"
-          ></v-text-field>
+            <v-text-field
+              v-model="width"
+              label="Width (px)"
+              variant="outlined"
+              hide-details
+              required
+              clearable
+              density="compact"
+              style="max-width: 200px;"
+              class="mr-3"
+            ></v-text-field>
+          </v-col>
 
-          <v-text-field
-            v-model="width"
-            label="Width (px)"
-            variant="outlined"
-            hide-details
-            required
-            clearable
-            density="compact"
-            style="max-width: 200px;"
-            class="mr-3"
-          ></v-text-field>
-
-          <v-btn
+          <v-col class="d-flex align-center justify-end">
+            <v-btn
               v-on:click="addRow"
+              title="Add row"
               dark
               bottom
-              variant="text"
               class="mr-3"
             >
-              Add row
-          </v-btn>
+              <v-icon>mdi-plus-thick</v-icon>
+            </v-btn>
 
-          <v-btn
-            :disabled="inputRows.length < 2"
-            v-on:click="removeRows"
-            dark
-            bottom
-            variant="text"
-            class="mr-3"
-          >
-            Remove row
-          </v-btn>
-        </v-col>
-      </v-container>
-
-        <v-col class="d-flex justify-center">
-          <v-btn
-              v-on:click="updateChartSeries"
+            <v-btn
+              :disabled="inputRows.length < 2"
+              v-on:click="removeRows"
+              title="Remove row"
               dark
               bottom
-              :disabled="!allFieldsFilled"
+              class="mr-3"
             >
-              Generate timeline
-          </v-btn>
-        </v-col>
+            <v-icon>mdi-minus-thick</v-icon>
+            </v-btn>
+            
+            
+            <v-btn
+              :disabled="inputRows.length < 2"
+              v-on:click="clearAll"
+              title="Clear all"
+              dark
+              bottom
+              class="mr-3"
+            >
+            <v-icon>mdi-close-thick</v-icon>
+            </v-btn>
 
-        <div id="chart"></div>
+            
+            <v-btn
+              v-on:click="uploadData"
+              title="Upload data"
+              dark
+              bottom       
+              class="mr-3"            
+            >
+            <v-icon>mdi-upload</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row class="generate-button"> 
+          <v-col class="d-flex justify-center">
+            <v-btn
+                v-on:click="updateChartSeries"
+                title="Generate chart"
+                dark
+                bottom
+                :disabled="!allFieldsFilled"
+              >
+                Generate timeline
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row class="chart">
+          <div id="chart"></div>
+        </v-row>
 
       </v-responsive>
   </v-container>
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
-import ApexCharts from 'apexcharts';
+import { ref, computed, watch, onMounted } from 'vue'
+import { saveInputRows, loadInputRows, clearInputRows, handleFileSelect } from '../helper/utils.js';
+import { loadChart, updateChartSeries, defaultChartOptions } from '../helper/chart.js';
 
 export default {
 
   setup() {
-
     // input fields
     const title = ref('Timeline');
     const height = ref('400');
     const width = ref('900');
     const inputRows = ref([
       {
-        name: '',
-        startTime: '',
-        endTime: ''
+        name: '', startTime: '', endTime: ''
       }
     ])
 
-    // rows
+    loadChart(defaultChartOptions);
+
+    // buttons
     const addRow = () => {
       inputRows.value.push({
-        name: '',
-        startTime: '',
-        endTime: ''
+        name: '', startTime: '',endTime: ''
       })
     }
 
@@ -175,6 +202,25 @@ export default {
         inputRows.value.pop();
       }
     };
+
+    // clear all
+    const clearAll = () => {
+      inputRows.value.splice(1);
+      inputRows.value[0] = {
+        name: '', startTime: '',endTime: ''
+      };
+        clearInputRows();
+    }
+
+    // upload data from file
+    function uploadData() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.csv';
+      input.onchange = () => handleFileSelect(input, inputRows);
+      input.click();
+      saveInputRows();
+    }
 
     // datepicker
     function updateStartTime(row, date) {
@@ -202,114 +248,15 @@ export default {
       return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
     })
 
-    // chart
-    onMounted(() => {
-      chart.value = new ApexCharts(document.querySelector("#chart"), options);
-      chart.value.render();
-    });
+    // local storage
+    const saveRows = () => saveInputRows(inputRows.value);
+    const loadRows = () => loadInputRows(inputRows);
 
-    function updateChartSeries() {
-      let data = inputRows.value.map(row => {
-        // split start and end time
-        const [startMonth, startYear] = row.startTime.split('.');
-        const [endMonth, endYear] = row.endTime.split('.');
-        
-        // re-format style
-        const startTimeFull = `${startYear}-${startMonth}-01`;
-        const endTimeFull = `${endYear}-${endMonth}-01`;
+    onMounted(loadRows);
 
-        // create a date object
-        const startTimeDate = new Date(startTimeFull);
-        const endTimeDate = new Date(endTimeFull);
-
-        return {
-          x: row.name,
-          y: [startTimeDate.getTime(), endTimeDate.getTime()]
-        };
-      });
-
-      chart.value.updateSeries([
-        {
-          name: "",
-          data: data
-        }
-      ]);
-
-      chart.value.updateOptions({        
-        title: {
-          text: title.value
-        },
-        chart: {
-          height: height.value,
-          width: width.value
-        }
-      });
-    }
-
-    let options = {
-      title: {
-        text: 'Timeline',
-        align: 'center',
-        style: {
-          fontSize: '20px',
-          fontWeight: 'bold',
-          fontFamily: 'Roboto, sans-serif',
-          color: '#263238'
-        },
-      },
-      chart: {
-        height: '400px',
-        width: '900px',
-        responsive: true,
-        type: 'rangeBar',
-        toolbar: {
-          show: true,
-        },
-        zoom: {
-          enabled: true,
-      },
-        background: 'white'
-      },
-      plotOptions: {
-        bar: {
-          distributed: true,
-          horizontal: true,
-          barHeight: '30%'
-        }
-      },
-      xaxis: {
-        type: 'datetime',
-        categories: []
-      },
-      tooltip: {
-        enabled: false,
-        },
-      grid: {
-        row: {
-          colors: ["#f3f3f3", "transparent"], 
-          opacity: 0.5
-        }
-      },
-      theme: {
-        mode: 'light',
-        palette: 'palette3'
-      },
-      series: [
-        {
-          name: "",
-          data: [
-            {
-                  x: '',
-                  y: [
-                    new Date('1970-01-01').getTime(),
-                    new Date('2038-01-19').getTime()
-                  ]
-                },
-          ],
-
-        }
-      ],
-    };
+    watch(inputRows, () => {
+      saveRows();
+    }, { deep: true });
 
     return {
       inputRows,
@@ -318,19 +265,25 @@ export default {
       width,
       addRow,
       removeRows,
+      clearAll,
+      uploadData,
       allFieldsFilled,
       rules,
       updateChartSeries,
-      options,
       updateStartTime,
-      updateEndTime
+      updateEndTime,
     }
-  },
+  }
 }
 </script>
 
 <style>
+/* horizontal scrollbar is needed */ 
+html {
+  overflow-x: auto;
+}
 
+/* set the chart div to the center */ 
 #chart {
   width: 100%;
   height: auto;
@@ -340,4 +293,4 @@ export default {
   justify-content: center;
 }
 
-</style>
+</style>../helper/utils.js
