@@ -1,7 +1,6 @@
 <template>
   <v-container class="fill-height">
-    <v-responsive
-      class="align-centerfill-height mx-auto"
+    <v-responsive class="align-centerfill-height mx-auto"
       min-width="720"
       max-width="2048"
     >
@@ -14,8 +13,8 @@
           <v-col class="pr-3">
             <v-text-field
               v-model="row.name"
-              :rules="[rules.required]"
               label="Name"
+              :rules=[rules.nameRequiredRule]
               variant="outlined"
               required
               clearable
@@ -23,48 +22,25 @@
           </v-col>
 
           <v-col class="pr-3">
-            <VueDatePicker @update:model-value="(v) => updateStartTime(row, v)" month-picker>
-              <template #trigger>
-                <v-text-field
-                  v-model="row.startTime"
-                  :rules="[rules.dateFormatRule]"
-                  label="Start time"
-                  variant="outlined"
-                  required
-                  clearable
-                >
-                  <template #append-inner>
-                    <v-btn icon variant="plain"><v-icon>mdi-calendar</v-icon></v-btn>
-                  </template>
-                </v-text-field>
-              </template>
-            </VueDatePicker>
+            <AppDatePicker
+              v-model="row.startTime"
+              :label="'Start time'"
+              :rules=[rules.dateFormatRule]
+            />
           </v-col>
 
           <v-col class="pr-3">
-            <VueDatePicker @update:model-value="(v) => updateEndTime(row, v)" month-picker>
-              <template #trigger>
-                <v-text-field
-                  v-model="row.endTime"
-                  :rules="[rules.dateFormatRule]"
-                  label="End time"
-                  variant="outlined"
-                  required
-                  clearable
-                >
-                  <template #append-inner>
-                      <v-btn icon variant="plain"><v-icon>mdi-calendar</v-icon> </v-btn>
-                  </template>
-						
-                </v-text-field>
-              </template>
-            </VueDatePicker>
+            <AppDatePicker
+              v-model="row.endTime"
+              :label="'End time'"
+              :rules=[rules.dateFormatRule] 
+            />
           </v-col>
         </v-row>
 
         <v-row class="optional-elements" >
           <v-col class="d-flex align-center justify-left">
-            <v-text-field
+            <v-text-field class="mr-3" style="max-width: 200px;"
               v-model="title"
               label="Title"
               variant="outlined"
@@ -72,11 +48,10 @@
               required
               clearable
               density="compact"
-              style="max-width: 200px;"
-              class="mr-3"
-            ></v-text-field>
+            >
+            </v-text-field>
 
-            <v-text-field
+            <v-text-field class="mr-3" style="max-width: 200px;"
               v-model="height"
               label="Height (px)"
               variant="outlined"
@@ -84,11 +59,10 @@
               required
               clearable
               density="compact"
-              style="max-width: 200px;"
-              class="mr-3"
-            ></v-text-field>
+            >
+            </v-text-field>
 
-            <v-text-field
+            <v-text-field class="mr-3" style="max-width: 200px;"
               v-model="width"
               label="Width (px)"
               variant="outlined"
@@ -96,52 +70,45 @@
               required
               clearable
               density="compact"
-              style="max-width: 200px;"
-              class="mr-3"
-            ></v-text-field>
+            >
+            </v-text-field>
           </v-col>
 
           <v-col class="d-flex align-center justify-end">
-            <v-btn
+            <v-btn class="mr-3"
               v-on:click="addRow"
               title="Add row"
               dark
               bottom
-              class="mr-3"
             >
               <v-icon>mdi-plus-thick</v-icon>
             </v-btn>
 
-            <v-btn
+            <v-btn class="mr-3"
               :disabled="inputRows.length < 2"
               v-on:click="removeRows"
               title="Remove row"
               dark
               bottom
-              class="mr-3"
             >
             <v-icon>mdi-minus-thick</v-icon>
-            </v-btn>
+            </v-btn>            
             
-            
-            <v-btn
+            <v-btn class="mr-3"
               :disabled="inputRows.length < 2"
               v-on:click="clearAll"
               title="Clear all"
               dark
               bottom
-              class="mr-3"
             >
             <v-icon>mdi-close-thick</v-icon>
             </v-btn>
 
-            
-            <v-btn
+            <v-btn class="mr-3"
               v-on:click="uploadData"
               title="Upload data"
               dark
-              bottom       
-              class="mr-3"            
+              bottom
             >
             <v-icon>mdi-upload</v-icon>
             </v-btn>
@@ -151,11 +118,11 @@
         <v-row class="generate-button"> 
           <v-col class="d-flex justify-center">
             <v-btn
+                :disabled="!allFieldsFilled"
                 v-on:click="generateChart"
                 title="Generate chart"
                 dark
                 bottom
-                :disabled="!allFieldsFilled"
               >
                 Generate timeline
             </v-btn>
@@ -174,8 +141,12 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { saveInputRows, loadInputRows, clearInputRows, handleFileSelect } from '../helper/utils.js';
 import { loadChart, updateChartSeries, defaultChartOptions } from '../helper/chart.js';
+import AppDatePicker from './AppDatePicker.vue';
 
 export default {
+  components: {
+    AppDatePicker
+  },
 
   setup() {
     // input fields
@@ -221,28 +192,12 @@ export default {
       saveInputRows();
     }
 
-    // datepicker
-    function updateStartTime(row, date) {
-      row.startTime = toMMYYYY(date);
-    }
-
-    function updateEndTime(row, date) {
-      row.endTime = toMMYYYY(date);
-    }
-
-    function toMMYYYY(date) {
-      const month = date.month + 1;
-      const monthStr = (month < 10 ? '0' : '') + String(month);
-      const year = date.year;
-      return `${monthStr}.${year}`;
-    }
-
     // rules
     const rules = {
-      required: value => !!value || 'Name is required',
+      nameRequiredRule: value => !!value || 'Name is required',
       dateFormatRule: value => /^(0[1-9]|1[0-2])\.\d{4}$/.test(value) || 'Correct format is MM.YYYY',
     }
-
+    
     const allFieldsFilled = computed(() => {
       return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
     })
@@ -257,23 +212,15 @@ export default {
     watch(inputRows, () => {
       saveRows();
     }, { deep: true });
-
+    
     return {
-      inputRows,
-      title,
-      height,
-      width,
-      addRow,
-      removeRows,
-      clearAll,
-      uploadData,
-      allFieldsFilled,
-      rules,
-      updateStartTime,
-      updateEndTime,
+      inputRows, title, height, width,
+      addRow, removeRows, clearAll, uploadData,
+      rules, allFieldsFilled,
       generateChart
     }
-  }
+  },
+
 }
 </script>
 
@@ -293,4 +240,13 @@ html {
   justify-content: center;
 }
 
-</style>../helper/utils.js
+.dp__theme_light {
+  --dp-font-family: 'Roboto', sans-serif;
+  --dp-text-color: #fff;
+  --dp-background-color: #121212;
+  --dp-primary-color: #212121;
+  --dp-border-color: transparent;
+  --dp-action-button-height: 34px;
+}
+
+</style>
