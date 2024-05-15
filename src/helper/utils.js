@@ -23,17 +23,13 @@ export function handleFileSelect(input, inputRows) {
     const file = input.files[0];
     if (file) {
         const reader = new FileReader();
-        console.log('File uploaded sdsdfsdfsdfds');
         reader.onload = (event) => handleFileLoad(event, inputRows);
         reader.readAsText(file);
-        console.log('File uploaded successfully');
     }
 }
 
 export function handleFileLoad(event, inputRows) {
-    console.log('handleFileLoad input.files');
     const csvData = event.target.result;
-    console.log('handleFileLoad csvData');
     const rows = csvData.trim().split('\n');
     inputRows.value = rows.map(row => {
         const [name, start, end] = row.split(',');
