@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.4
+  - extracted date picker code to separate component
+  - minor cleanup and minor css formatting
+
 ### v1.3
   - updated package.json
   - extracted some functions (working with local storage and upload data) into separate js file
