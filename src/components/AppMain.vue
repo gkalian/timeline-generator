@@ -43,6 +43,7 @@
             <v-text-field class="mr-3" style="max-width: 250px;"
               v-model="title"
               label="Title"
+              :rules=[rules.chartRequiredRule]
               variant="outlined"
               hide-details
               required
