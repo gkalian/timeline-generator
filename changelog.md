@@ -1,5 +1,10 @@
 ## Changelog
 
+### v1.5
+  - added watch to the date fields
+  - minor fixes - remove mdi font package
+  - publish everything on github pages
+
 ### v1.4
   - extracted date picker code to separate component
   - minor cleanup and minor css formatting

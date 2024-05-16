@@ -7,7 +7,7 @@ A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vu
 **Plans to do**:
 
 - ~~Extract the VueDatePicker code to a separate component~~
-- Improve the VueDatePicker style and update the overall app style
+- ~~Improve the VueDatePicker style and update the overall app style~~
 - ~~Save input date in browser kv store~~
 - ~~Add possibility to import data from .csv file~~
 - ~~Update demo pic to actual state~~

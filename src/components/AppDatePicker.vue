@@ -8,6 +8,7 @@
             variant="outlined"
             required
             clearable
+            readonly
         >
             <template #append-inner>
             <v-btn icon variant="plain"><v-icon>mdi-calendar</v-icon></v-btn>
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -58,6 +59,10 @@ setup(props, { emit }) {
         const year = date.getFullYear();
         return `${monthStr}.${year}`;
     }
+
+    watch(() => props.modelValue, (newValue) => {
+        value.value = newValue;
+    });
 
     return {
         value,
