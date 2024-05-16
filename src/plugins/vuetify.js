@@ -4,7 +4,6 @@
  */
 
 // Styles
-import '@mdi/font/css/materialdesignicons.css'
 import "vuetify/styles";
 import '@vuepic/vue-datepicker/dist/main.css'
 
