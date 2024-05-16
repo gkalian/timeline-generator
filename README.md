@@ -2,13 +2,7 @@
 
 A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vue-datepicker** libraries. Supports multiple rows, changing the chart title, and resizing the entire chart.
 
-<details>
-<summary>Demo</summary>
-<br>
-  
-  ![Demo](./public/demo.gif)
-  
-</details>
+[Live generator](https://gkalian.github.io/timeline-generator/)
 
 **Plans to do**:
 
@@ -16,7 +10,7 @@ A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vu
 - Improve the VueDatePicker style and update the overall app style
 - ~~Save input date in browser kv store~~
 - ~~Add possibility to import data from .csv file~~
-- Update demo pic to actual state
+- ~~Update demo pic to actual state~~
 - (Probably) Replace later the VueDatePicker with default [Date Input](https://vuetifyjs.com/en/components/date-inputs/) component.
 
 ### Build 
