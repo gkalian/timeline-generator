@@ -40,7 +40,7 @@
 
         <v-row class="optional-elements" >
           <v-col class="d-flex align-center justify-left">
-            <v-text-field class="mr-3" style="max-width: 200px;"
+            <v-text-field class="mr-3" style="max-width: 250px;"
               v-model="title"
               label="Title"
               variant="outlined"
@@ -51,9 +51,10 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3" style="max-width: 200px;"
+            <v-text-field class="mr-3" style="max-width: 250px;"
               v-model="height"
               label="Height (px)"
+              :rules=[rules.chartRequiredRule]
               variant="outlined"
               hide-details
               required
@@ -62,9 +63,10 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3" style="max-width: 200px;"
+            <v-text-field class="mr-3" style="max-width: 250px;"
               v-model="width"
               label="Width (px)"
+              :rules=[rules.chartRequiredRule]
               variant="outlined"
               hide-details
               required
@@ -196,6 +198,7 @@ export default {
     const rules = {
       nameRequiredRule: value => !!value || 'Name is required',
       dateFormatRule: value => /^(0[1-9]|1[0-2])\.\d{4}$/.test(value) || 'Correct format is MM.YYYY',
+      chartRequiredRule: value => !!value || 'Value is required',
     }
     
     const allFieldsFilled = computed(() => {
