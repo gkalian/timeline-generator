@@ -1,5 +1,8 @@
 ## Changelog
 
+### v1.6
+  - update dependencies
+
 ### v1.5
   - added watch to the date fields
   - minor fixes - remove mdi font package
