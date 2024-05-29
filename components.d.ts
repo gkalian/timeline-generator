@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AppChartSettings: typeof import('./src/components/AppChartSettings.vue')['default']
     AppDatePicker: typeof import('./src/components/AppDatePicker.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppMain: typeof import('./src/components/AppMain.vue')['default']

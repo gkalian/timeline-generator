@@ -40,7 +40,7 @@
 
         <v-row class="optional-elements" >
           <v-col class="d-flex align-center justify-left">
-            <v-text-field class="mr-3" style="max-width: 250px;"
+            <v-text-field class="mr-3" style="max-width: 250px; min-width: 250px;"
               v-model="title"
               label="Title"
               :rules=[rules.chartRequiredRule]
@@ -52,7 +52,7 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3" style="max-width: 250px;"
+            <v-text-field class="mr-3" style="max-width: 250px; min-width: 250px;"
               v-model="height"
               label="Height (px)"
               :rules=[rules.chartRequiredRule]
@@ -64,7 +64,7 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3" style="max-width: 250px;"
+            <v-text-field class="mr-3" style="max-width: 250px; min-width: 250px;"
               v-model="width"
               label="Width (px)"
               :rules=[rules.chartRequiredRule]
@@ -75,6 +75,10 @@
               density="compact"
             >
             </v-text-field>
+
+            <v-col>
+              <v-btn :disabled="true" @click="toggleNewRow">{{ showNewRow ? 'Less' : 'More' }} settings</v-btn>
+            </v-col>
           </v-col>
 
           <v-col class="d-flex align-center justify-end">
@@ -118,6 +122,15 @@
           </v-col>
         </v-row>
 
+        <v-row v-show="showNewRow" class="chart-settings">
+          <AppChartSettings
+            :initial-palette="palette"
+            :initial-theme="theme"
+            @update:palette="updatePalette"
+            @update:theme="updateTheme"
+          />
+        </v-row>
+
         <v-row class="generate-button"> 
           <v-col class="d-flex justify-center">
             <v-btn
@@ -145,10 +158,12 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { saveInputRows, loadInputRows, clearInputRows, handleFileSelect } from '../helper/utils.js';
 import { loadChart, updateChartSeries, defaultChartOptions } from '../helper/chart.js';
 import AppDatePicker from './AppDatePicker.vue';
+import AppChartSettings from './AppChartSettings.vue';
 
 export default {
   components: {
-    AppDatePicker
+    AppDatePicker,
+    AppChartSettings
   },
 
   setup() {
@@ -160,8 +175,22 @@ export default {
       {
         name: '', startTime: '', endTime: ''
       }
-    ])
+    ]);
+    const showNewRow = ref(false);
 
+    const palette = ref('palette3');
+    const theme = ref('light');
+
+    const updatePalette = (newPalette) => {
+      console.log('Parent received new palette:', newPalette);
+      palette.value = newPalette;
+    };
+
+    const updateTheme = (newTheme) => {
+      console.log('Parent received new theme:', newTheme);
+      theme.value = newTheme;
+    };
+    
     loadChart(defaultChartOptions);
 
     // buttons
@@ -209,7 +238,8 @@ export default {
     // methods
     const saveRows = () => saveInputRows(inputRows.value);
     const loadRows = () => loadInputRows(inputRows);
-    const generateChart = () => updateChartSeries(inputRows, title, height, width);
+    const generateChart = () => updateChartSeries(inputRows, title, height, width, theme, palette);
+    const toggleNewRow = () => showNewRow.value = !showNewRow.value;
 
     onMounted(loadRows);
 
@@ -219,9 +249,10 @@ export default {
     
     return {
       inputRows, title, height, width,
+      palette, theme, updatePalette, updateTheme,
       addRow, removeRows, clearAll, uploadData,
       rules, allFieldsFilled,
-      generateChart
+      showNewRow, toggleNewRow, generateChart,
     }
   },
 

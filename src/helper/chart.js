@@ -11,8 +11,10 @@ export const loadChart = (options) => {
         });
 };
 
-export const updateChartSeries = (inputRows, title, height, width) => {
-    //console.log('inputRows: ', inputRows.value, ', title: ', title.value, ', height: ', height.value, ', width: ', width.value);
+export const updateChartSeries = (inputRows, title, height, width, palette, theme) => {
+    console.log('inputRows: ', inputRows.value, ', title: ', title.value, 
+                ', height: ', height.value, ', width: ', width.value,
+                ', palette: ', palette.value, ', theme: ', theme.value);
     let data = inputRows.value.map(row => {
     const [startMonth, startYear] = row.startTime.split('.');
     const [endMonth, endYear] = row.endTime.split('.');
@@ -43,7 +45,11 @@ export const updateChartSeries = (inputRows, title, height, width) => {
         chart: {
             height: height.value,
             width: width.value
-        }
+        },
+        theme: {
+            mode: theme.value,
+            palette: palette.value
+        },
         });
 };
 
@@ -64,10 +70,10 @@ export const defaultChartOptions = {
         responsive: true,
         type: 'rangeBar',
         toolbar: {
-        show: true,
+            show: true,
         },
         zoom: {
-        enabled: true,
+            enabled: true,
     },
         background: 'white'
     },
