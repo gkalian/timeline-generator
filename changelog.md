@@ -1,5 +1,8 @@
 ## Changelog
 
+### v1.6.2
+  - update dependencies
+
 ### v1.6.1
   - added code to update theme and palette, currently disabled
   - update dependencies
