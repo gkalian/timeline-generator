@@ -48,7 +48,7 @@ setup(props, { emit }) {
     const value = ref(props.modelValue);
 
     function updateTime(newDate) {
-        const formattedDate = toMMYYYY(new Date(newDate.year, newDate.month - 1));
+        const formattedDate = toMMYYYY(new Date(newDate.year, newDate.month));
         value.value = formattedDate;
         emit('update:modelValue', formattedDate);
     }

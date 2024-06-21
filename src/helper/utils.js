@@ -32,11 +32,19 @@ export function handleFileLoad(event, inputRows) {
     const csvData = event.target.result;
     const rows = csvData.trim().split('\n');
     inputRows.value = rows.map(row => {
-        const [name, start, end] = row.split(',');
+        const [name, start, end] = row.replace(/\r/g, '').split(',');
+        const startTime = toMMYYYY(start);
+        const endTime = toMMYYYY(end);
         return {
             name,
-            startTime: start,
-            endTime: end
+            startTime,
+            endTime
         };
     });
+}
+
+function toMMYYYY(dateStr) {
+    const [month, year] = dateStr.split('.');
+    const monthStr = (month.length === 1 ? '0' : '') + month;
+    return `${monthStr}.${year}`;
 }

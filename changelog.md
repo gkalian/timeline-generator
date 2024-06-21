@@ -1,5 +1,13 @@
 ## Changelog
 
+### v1.6.4
+  - update dependencies
+  - fix weird calculation bugs
+  - update csv handling
+
+### v1.6.3
+  - update dependencies
+
 ### v1.6.2
   - update dependencies
 
