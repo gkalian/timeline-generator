@@ -7,20 +7,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vuepic/vue-datepicker": "^8.8.0",
-    "apexcharts": "^3.49.1",
+    "@vuepic/vue-datepicker": "^9.0.2",
+    "apexcharts": "^3.52.0",
     "roboto-fontface": "*",
-    "vue": "^3.4.29",
+    "vue": "^3.4.38",
     "vue3-apexcharts": "^1.5.3",
-    "vuetify": "^3.6.10"
+    "vuetify": "^3.7.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.5",
-    "sass": "^1.77.6",
-    "sass-loader": "^14.2.1",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "sass": "^1.77.8",
+    "sass-loader": "^16.0.1",
     "unplugin-fonts": "^1.1.1",
-    "unplugin-vue-components": "^0.27.0",
-    "vite": "^5.3.1",
-    "vite-plugin-vuetify": "^2.0.3"
+    "unplugin-vue-components": "^0.27.4",
+    "vite": "^5.4.2",
+    "vite-plugin-vuetify": "^2.0.4"
   }
 }

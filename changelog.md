@@ -1,5 +1,8 @@
 ## Changelog
 
+### v1.6.5
+  - update dependencies
+
 ### v1.6.4
   - update dependencies
   - fix weird calculation bugs
