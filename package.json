@@ -7,7 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vuepic/vue-datepicker": "^9.0.2",
+    "@vuepic/vue-datepicker": "^11.0.0",
     "apexcharts": "^3.52.0",
     "roboto-fontface": "*",
     "vue": "^3.4.38",
