@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^9.0.2",
-    "apexcharts": "^3.52.0",
+    "apexcharts": "^4.0.0",
     "roboto-fontface": "*",
     "vue": "^3.4.38",
     "vue3-apexcharts": "^1.5.3",
