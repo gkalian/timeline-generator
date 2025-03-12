@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.5.3
+  - added more comments
+  - update dependencies
+
 ### v1.5.2
   - update dependencies
   - fix weird calculation bugs
