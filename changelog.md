@@ -1,28 +1,12 @@
 ## Changelog
 
-### v1.6.6
-  - added more comments
-  - update dependencies
-
-### v1.6.5
-  - update dependencies
-
-### v1.6.4
+### v1.5.2
   - update dependencies
   - fix weird calculation bugs
   - update csv handling
 
-### v1.6.3
-  - update dependencies
-
-### v1.6.2
-  - update dependencies
-
-### v1.6.1
+### v1.5.1
   - added code to update theme and palette, currently disabled
-  - update dependencies
-
-### v1.6
   - update dependencies
 
 ### v1.5
