@@ -1,13 +1,10 @@
-/**
- * plugins/vuetify.js
- *
- */
-
-// Styles
 import "vuetify/styles";
 import '@vuepic/vue-datepicker/dist/main.css'
 
-// Composables
+/**
+ * Vuetify instance with custom configuration
+ * @type {import('vuetify').VuetifyOptions}
+ */
 import { createVuetify } from 'vuetify'
 
 export default createVuetify({

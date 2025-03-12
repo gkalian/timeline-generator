@@ -1,5 +1,9 @@
 ## Changelog
 
+### v1.6.6
+  - added more comments
+  - update dependencies
+
 ### v1.6.5
   - update dependencies
 

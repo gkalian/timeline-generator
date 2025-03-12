@@ -7,10 +7,13 @@ import ViteFonts from 'unplugin-fonts/vite'
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/timeline-generator/",
+  base: "",
+  publicDir: path.resolve(__dirname, 'public'),
+  root: path.resolve(__dirname),
   plugins: [
     Vue({
       template: { transformAssetUrls }
