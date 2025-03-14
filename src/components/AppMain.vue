@@ -164,8 +164,8 @@
 
 <script>
 import { ref, computed, watch, onMounted } from 'vue'
-import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, handleFileSelect } from '../helper/utils.js';
-import { loadChart, updateChartSeries, defaultChartOptions, chart } from '../helper/chart.js';
+import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, clearChartSettings } from '../helper/utils.js';
+import { loadChart, updateChartSeries } from '../helper/chart.js';
 import AppDatePicker from './AppDatePicker.vue';
 import AppChartSettings from './AppChartSettings.vue';
 
@@ -176,7 +176,6 @@ export default {
   },
 
   setup() {
-    // Загружаем настройки графика из localStorage
     const chartSettings = loadChartSettings();
     const title = ref(chartSettings.title);
     const height = ref(chartSettings.height);
@@ -202,7 +201,6 @@ export default {
       theme.value = newTheme;
     };
 
-    // Инициализируем график с настройками по умолчанию
     loadChart();
 
     // buttons
@@ -223,7 +221,13 @@ export default {
       inputRows.value[0] = {
         name: '', startTime: '',endTime: ''
       };
+
+      title.value = 'Timeline';
+      height.value = '400';
+      width.value = '900';
+
       clearInputRows();
+      clearChartSettings();
     }
 
     // upload data from file
@@ -265,10 +269,8 @@ export default {
         ].join(',');
       }).join('\n');
 
-      // Объединяем всё в один файл CSV
       const csvContent = metadataRow + '\n' + dataRows;
 
-      // Создаем ссылку для скачивания
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -291,7 +293,6 @@ export default {
       return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
     })
 
-    // Функция для загрузки настроек графика из localStorage
     function loadChartSettings() {
       const savedTitle = localStorage.getItem('chartTitle');
       const savedHeight = localStorage.getItem('chartHeight');
@@ -335,7 +336,6 @@ export default {
 
 <style>
 
-/* Контейнер для графика */
 .chart-container {
   width: 100%;
   margin: 0;
@@ -344,7 +344,6 @@ export default {
   justify-content: center;
 }
 
-/* Обертка для графика с прокруткой */
 .chart-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -353,7 +352,6 @@ export default {
   justify-content: center;
 }
 
-/* Сам элемент графика */
 .chart-element {
   min-width: 100%;
   height: auto;
@@ -365,7 +363,6 @@ export default {
 }
 
 
-/* Горизонтальная прокрутка для всего документа при необходимости */
 html, body {
   overflow-x: auto;
 }

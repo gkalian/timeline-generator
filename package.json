@@ -1,6 +1,6 @@
 {
   "name": "timeline-chart-genetator",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "scripts": {
     "start": "vite",
     "build": "vite build",

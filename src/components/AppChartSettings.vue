@@ -6,7 +6,7 @@
         v-model="localTheme"
         @change="onThemeSelect"
         label="Theme"
-        :items="themes" 
+        :items="themes"
         variant="outlined"
         hide-details
         density="compact"
@@ -22,7 +22,7 @@
         </v-list>
         </v-menu>
     </div>
-    </v-col>    
+    </v-col>
 
     <v-col>
     <div class="text-center">
@@ -30,7 +30,7 @@
         v-model="localPalette"
         @change="onPaletteSelect"
         label="Palette"
-        :items="palettes" 
+        :items="palettes"
         variant="outlined"
         hide-details
         density="compact"
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { ref, defineComponent, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 export default {
     props: {
@@ -134,7 +134,7 @@ export default {
                 'light',
                 'dark',
             ],
-        
+
         };
     },
 };

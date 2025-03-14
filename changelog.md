@@ -1,5 +1,8 @@
 ## Changelog
 
+### v1.6.1
+  - correct clean button behavior
+
 ### v1.6.0
   - refactor code
   - extend csv file
