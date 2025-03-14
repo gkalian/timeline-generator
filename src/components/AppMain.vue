@@ -1,7 +1,7 @@
 <template>
-  <v-container class="fill-height">
-    <v-responsive class="align-centerfill-height mx-auto"
-      min-width="720"
+  <v-container>
+    <v-responsive class="align-center mx-auto"
+      min-width="320"
       max-width="2048"
     >
       <div class="header">
@@ -9,8 +9,8 @@
         <br/>
       </div>
 
-        <v-row class="main-input-fields" v-for="(row, index) in inputRows" :key="index" dense>
-          <v-col class="pr-3">
+        <v-row class="main-input-fields" v-for="(row, index) in inputRows" :key="index" dense wrap>
+          <v-col cols="12" sm="12" md="4" class="pr-md-3">
             <v-text-field
               v-model="row.name"
               label="Name"
@@ -21,7 +21,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col class="pr-3">
+          <v-col cols="12" sm="6" md="4" class="pr-md-3">
             <AppDatePicker
               v-model="row.startTime"
               :label="'Start time'"
@@ -29,18 +29,18 @@
             />
           </v-col>
 
-          <v-col class="pr-3">
+          <v-col cols="12" sm="6" md="4" class="pr-md-3">
             <AppDatePicker
               v-model="row.endTime"
               :label="'End time'"
-              :rules=[rules.dateFormatRule] 
+              :rules=[rules.dateFormatRule]
             />
           </v-col>
         </v-row>
 
-        <v-row class="optional-elements" >
-          <v-col class="d-flex align-center justify-left">
-            <v-text-field class="mr-3" style="max-width: 250px; min-width: 250px;"
+        <v-row class="optional-elements" wrap>
+          <v-col cols="12" md="7" class="d-flex flex-wrap align-center justify-start">
+            <v-text-field class="mr-3 mb-3" style="max-width: 250px; min-width: 200px;"
               v-model="title"
               label="Title"
               :rules=[rules.chartRequiredRule]
@@ -52,7 +52,7 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3" style="max-width: 250px; min-width: 250px;"
+            <v-text-field class="mr-3 mb-3" style="max-width: 250px; min-width: 150px;"
               v-model="height"
               label="Height (px)"
               :rules=[rules.chartRequiredRule]
@@ -64,7 +64,7 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3" style="max-width: 250px; min-width: 250px;"
+            <v-text-field class="mr-3 mb-3" style="max-width: 250px; min-width: 150px;"
               v-model="width"
               label="Width (px)"
               :rules=[rules.chartRequiredRule]
@@ -76,13 +76,11 @@
             >
             </v-text-field>
 
-            <v-col>
-              <v-btn :disabled="true" @click="toggleNewRow">{{ showNewRow ? 'Less' : 'More' }} settings</v-btn>
-            </v-col>
+            <v-btn class="mb-3" :disabled="true" @click="toggleNewRow">{{ showNewRow ? 'Less' : 'More' }} settings</v-btn>
           </v-col>
 
-          <v-col class="d-flex align-center justify-end">
-            <v-btn class="mr-3"
+          <v-col cols="12" md="5" class="d-flex flex-wrap align-center justify-start justify-md-end">
+            <v-btn class="mr-3 mb-3"
               v-on:click="addRow"
               title="Add row"
               dark
@@ -91,7 +89,7 @@
               <v-icon>mdi-plus-thick</v-icon>
             </v-btn>
 
-            <v-btn class="mr-3"
+            <v-btn class="mr-3 mb-3"
               :disabled="inputRows.length < 2"
               v-on:click="removeRows"
               title="Remove row"
@@ -99,9 +97,9 @@
               bottom
             >
             <v-icon>mdi-minus-thick</v-icon>
-            </v-btn>            
-            
-            <v-btn class="mr-3"
+            </v-btn>
+
+            <v-btn class="mr-3 mb-3"
               :disabled="inputRows.length < 2"
               v-on:click="clearAll"
               title="Clear all"
@@ -111,13 +109,22 @@
             <v-icon>mdi-close-thick</v-icon>
             </v-btn>
 
-            <v-btn class="mr-3"
+            <v-btn class="mr-3 mb-3"
               v-on:click="uploadData"
               title="Upload data"
               dark
               bottom
             >
             <v-icon>mdi-upload</v-icon>
+            </v-btn>
+
+            <v-btn class="mr-3 mb-3"
+              v-on:click="downloadData"
+              title="Download data"
+              dark
+              bottom
+            >
+            <v-icon>mdi-download</v-icon>
             </v-btn>
           </v-col>
         </v-row>
@@ -131,7 +138,7 @@
           />
         </v-row>
 
-        <v-row class="generate-button"> 
+        <v-row class="generate-button">
           <v-col class="d-flex justify-center">
             <v-btn
                 :disabled="!allFieldsFilled"
@@ -145,8 +152,10 @@
           </v-col>
         </v-row>
 
-        <v-row class="chart">
-          <div id="chart"></div>
+        <v-row class="chart-container">
+          <v-col cols="12" class="chart-wrapper">
+            <div id="chart" class="chart-element"></div>
+          </v-col>
         </v-row>
 
       </v-responsive>
@@ -155,8 +164,8 @@
 
 <script>
 import { ref, computed, watch, onMounted } from 'vue'
-import { saveInputRows, loadInputRows, clearInputRows, handleFileSelect } from '../helper/utils.js';
-import { loadChart, updateChartSeries, defaultChartOptions } from '../helper/chart.js';
+import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, handleFileSelect } from '../helper/utils.js';
+import { loadChart, updateChartSeries, defaultChartOptions, chart } from '../helper/chart.js';
 import AppDatePicker from './AppDatePicker.vue';
 import AppChartSettings from './AppChartSettings.vue';
 
@@ -167,10 +176,12 @@ export default {
   },
 
   setup() {
-    // input fields
-    const title = ref('Timeline');
-    const height = ref('400');
-    const width = ref('900');
+    // Загружаем настройки графика из localStorage
+    const chartSettings = loadChartSettings();
+    const title = ref(chartSettings.title);
+    const height = ref(chartSettings.height);
+    const width = ref(chartSettings.width);
+
     const inputRows = ref([
       {
         name: '', startTime: '', endTime: ''
@@ -190,8 +201,9 @@ export default {
       console.log('Parent received new theme:', newTheme);
       theme.value = newTheme;
     };
-    
-    loadChart(defaultChartOptions);
+
+    // Инициализируем график с настройками по умолчанию
+    loadChart();
 
     // buttons
     const addRow = () => {
@@ -211,7 +223,7 @@ export default {
       inputRows.value[0] = {
         name: '', startTime: '',endTime: ''
       };
-        clearInputRows();
+      clearInputRows();
     }
 
     // upload data from file
@@ -219,9 +231,53 @@ export default {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = '.csv';
-      input.onchange = () => handleFileSelect(input, inputRows);
+      input.onchange = () => {
+        const file = input.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const result = handleFileLoad(event, inputRows);
+
+            if (result) {
+              title.value = result.chartTitle || 'Timeline';
+              height.value = result.chartHeight || '400';
+              width.value = result.chartWidth || '900';
+              inputRows.value = result.rows;
+              saveChartSettings(title.value, height.value, width.value);
+              saveRows();
+            }
+            saveRows();
+          };
+          reader.readAsText(file);
+        }
+      };
       input.click();
-      saveInputRows();
+    }
+
+    function downloadData() {
+      const metadataRow = [title.value, height.value, width.value].join(',');
+
+      const dataRows = inputRows.value.map(row => {
+        return [
+          row.name,
+          row.startTime,
+          row.endTime
+        ].join(',');
+      }).join('\n');
+
+      // Объединяем всё в один файл CSV
+      const csvContent = metadataRow + '\n' + dataRows;
+
+      // Создаем ссылку для скачивания
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.setAttribute('download', `${title.value || 'timeline'}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     // rules
@@ -230,49 +286,88 @@ export default {
       dateFormatRule: value => /^(0[1-9]|1[0-2])\.\d{4}$/.test(value) || 'Correct format is MM.YYYY',
       chartRequiredRule: value => !!value || 'Value is required',
     }
-    
+
     const allFieldsFilled = computed(() => {
       return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
     })
 
+    // Функция для загрузки настроек графика из localStorage
+    function loadChartSettings() {
+      const savedTitle = localStorage.getItem('chartTitle');
+      const savedHeight = localStorage.getItem('chartHeight');
+      const savedWidth = localStorage.getItem('chartWidth');
+
+      return {
+        title: savedTitle || 'Timeline',
+        height: savedHeight || '400',
+        width: savedWidth || '900'
+      };
+    }
+
     // methods
-    const saveRows = () => saveInputRows(inputRows.value);
+    const saveRows = () => saveInputRows(inputRows.value, title.value, height.value, width.value);
     const loadRows = () => loadInputRows(inputRows);
     const generateChart = () => updateChartSeries(inputRows, title, height, width, theme, palette);
     const toggleNewRow = () => showNewRow.value = !showNewRow.value;
 
-    onMounted(loadRows);
+    onMounted(() => {
+      loadRows();
+    });
 
     watch(inputRows, () => {
       saveRows();
     }, { deep: true });
-    
+
+    watch([title, height, width], () => {
+      saveRows();
+    });
+
     return {
       inputRows, title, height, width,
       palette, theme, updatePalette, updateTheme,
-      addRow, removeRows, clearAll, uploadData,
+      addRow, removeRows, clearAll, uploadData, downloadData,
       rules, allFieldsFilled,
       showNewRow, toggleNewRow, generateChart,
     }
   },
-
 }
 </script>
 
 <style>
-/* horizontal scrollbar is needed */ 
-html {
-  overflow-x: auto;
+
+/* Контейнер для графика */
+.chart-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
 }
 
-/* set the chart div to the center */ 
-#chart {
+/* Обертка для графика с прокруткой */
+.chart-wrapper {
   width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0;
+  justify-content: center;
+}
+
+/* Сам элемент графика */
+.chart-element {
+  min-width: 100%;
   height: auto;
+  padding-left: 5px;
+  padding-right: 5px;
   margin: 0 auto;
   display: flex;
-  align-items: center;
   justify-content: center;
+}
+
+
+/* Горизонтальная прокрутка для всего документа при необходимости */
+html, body {
+  overflow-x: auto;
 }
 
 .dp__theme_light {

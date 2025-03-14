@@ -1,57 +1,8 @@
-//working with Apex Chart
+// chart.js - исправленная версия
 import { ref, onMounted } from 'vue';
 import ApexCharts from 'apexcharts';
 
 export const chart = ref(null);
-
-export const loadChart = (options) => {
-    onMounted(() => {
-        chart.value = new ApexCharts(document.querySelector("#chart"), options);
-        chart.value.render();
-        });
-};
-
-export const updateChartSeries = (inputRows, title, height, width, palette, theme) => {
-    console.log('inputRows: ', inputRows.value, ', title: ', title.value, 
-                ', height: ', height.value, ', width: ', width.value,
-                ', palette: ', palette.value, ', theme: ', theme.value);
-    let data = inputRows.value.map(row => {
-    const [startMonth, startYear] = row.startTime.split('.');
-    const [endMonth, endYear] = row.endTime.split('.');
-
-    const startTimeFull = `${startYear}-${startMonth}-01`;
-    const endTimeFull = `${endYear}-${endMonth}-01`;
-
-    const startTimeDate = new Date(startTimeFull);
-    const endTimeDate = new Date(endTimeFull);
-
-    return {
-        x: row.name,
-        y: [startTimeDate.getTime(), endTimeDate.getTime()]
-    };
-    });
-
-    chart.value.updateSeries([
-        {
-            name: "",
-            data: data
-        }
-    ]);
-
-    chart.value.updateOptions({
-        title: {
-            text: title.value
-        },
-        chart: {
-            height: height.value,
-            width: width.value
-        },
-        theme: {
-            mode: theme.value,
-            palette: palette.value
-        },
-        });
-};
 
 export const defaultChartOptions = {
     title: {
@@ -93,7 +44,7 @@ export const defaultChartOptions = {
         },
     grid: {
         row: {
-        colors: ["#f3f3f3", "transparent"], 
+        colors: ["#f3f3f3", "transparent"],
         opacity: 0.5
         }
     },
@@ -115,4 +66,55 @@ export const defaultChartOptions = {
         ],
         }
     ],
+};
+
+export const loadChart = (options = defaultChartOptions) => {
+    onMounted(() => {
+        chart.value = new ApexCharts(document.querySelector("#chart"), options);
+        chart.value.render();
+    });
+};
+
+export const updateChartSeries = (inputRows, title, height, width, theme, palette) => {
+    if (!chart.value) return;
+
+    console.log('inputRows: ', inputRows.value, ', title: ', title.value,
+                ', height: ', height.value, ', width: ', width.value,
+                ', palette: ', palette.value, ', theme: ', theme.value);
+    let data = inputRows.value.map(row => {
+        const [startMonth, startYear] = row.startTime.split('.');
+        const [endMonth, endYear] = row.endTime.split('.');
+
+        const startTimeFull = `${startYear}-${startMonth}-01`;
+        const endTimeFull = `${endYear}-${endMonth}-01`;
+
+        const startTimeDate = new Date(startTimeFull);
+        const endTimeDate = new Date(endTimeFull);
+
+        return {
+            x: row.name,
+            y: [startTimeDate.getTime(), endTimeDate.getTime()]
+        };
+    });
+
+    chart.value.updateSeries([
+        {
+            name: "",
+            data: data
+        }
+    ]);
+
+    chart.value.updateOptions({
+        title: {
+            text: title.value
+        },
+        chart: {
+            height: height.value,
+            width: width.value
+        },
+        theme: {
+            mode: theme.value,
+            palette: palette.value
+        },
+    });
 };

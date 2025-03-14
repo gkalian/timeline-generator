@@ -1,5 +1,11 @@
 ## Changelog
 
+### v1.6.0
+  - refactor code
+  - extend csv file
+  - **feature**: add download button to save the data
+  - update dependencies
+
 ### v1.5.3
   - added more comments
   - update dependencies
