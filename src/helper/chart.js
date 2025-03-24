@@ -1,9 +1,20 @@
-// chart.js - corrected version
+/**
+ * @file chart.js
+ * @description Chart configuration and management functions for timeline visualization
+ */
 import { ref, onMounted } from 'vue';
 import ApexCharts from 'apexcharts';
 
+/**
+ * @description Reactive reference to the chart instance
+ * @type {import('vue').Ref<ApexCharts|null>}
+ */
 export const chart = ref(null);
 
+/**
+ * @description Default configuration options for the ApexCharts timeline chart
+ * @type {Object}
+ */
 export const defaultChartOptions = {
     title: {
         text: 'Timeline',
@@ -68,6 +79,11 @@ export const defaultChartOptions = {
     ],
 };
 
+/**
+ * @description Initializes and renders the chart when component is mounted
+ * @param {Object} options - Chart configuration options (defaults to defaultChartOptions)
+ * @returns {void}
+ */
 export const loadChart = (options = defaultChartOptions) => {
     onMounted(() => {
         chart.value = new ApexCharts(document.querySelector("#chart"), options);
@@ -75,6 +91,16 @@ export const loadChart = (options = defaultChartOptions) => {
     });
 };
 
+/**
+ * @description Updates the chart with new data and settings
+ * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Timeline data rows
+ * @param {import('vue').Ref<string>} title - Chart title
+ * @param {import('vue').Ref<string>} height - Chart height in pixels
+ * @param {import('vue').Ref<string>} width - Chart width in pixels
+ * @param {import('vue').Ref<string>} theme - Chart theme (light/dark)
+ * @param {import('vue').Ref<string>} palette - Chart color palette
+ * @returns {void}
+ */
 export const updateChartSeries = (inputRows, title, height, width, theme, palette) => {
     if (!chart.value) return;
 

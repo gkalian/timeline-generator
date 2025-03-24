@@ -1,6 +1,16 @@
-// utils.js - corrected version
+/**
+ * @file utils.js
+ * @description Utility functions for managing timeline data storage, loading, and file operations
+ */
 
-// Saving input rows to localStorage
+/**
+ * @description Saves input rows and chart settings to localStorage
+ * @param {Array<{name: string, startTime: string, endTime: string}>} inputRows - Array of timeline data rows
+ * @param {string} title - Chart title
+ * @param {string} height - Chart height in pixels
+ * @param {string} width - Chart width in pixels
+ * @returns {void}
+ */
 export function saveInputRows(inputRows, title, height, width) {
   const inputRowsJSON = JSON.stringify(inputRows);
   localStorage.setItem('inputRows', inputRowsJSON);
@@ -9,14 +19,24 @@ export function saveInputRows(inputRows, title, height, width) {
   saveChartSettings(title, height, width);
 }
 
-// Saving chart settings
+/**
+ * @description Saves chart settings to localStorage
+ * @param {string} title - Chart title
+ * @param {string} height - Chart height in pixels
+ * @param {string} width - Chart width in pixels
+ * @returns {void}
+ */
 export function saveChartSettings(title, height, width) {
   if (title !== undefined) localStorage.setItem('chartTitle', title);
   if (height !== undefined) localStorage.setItem('chartHeight', height);
   if (width !== undefined) localStorage.setItem('chartWidth', width);
 }
 
-// Loading input rows from localStorage
+/**
+ * @description Loads input rows from localStorage into a reactive reference
+ * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
+ * @returns {void}
+ */
 export function loadInputRows(inputRows) {
   const inputRowsJSON = localStorage.getItem('inputRows');
   if (inputRowsJSON) {
@@ -27,7 +47,10 @@ export function loadInputRows(inputRows) {
   }
 }
 
-// Loading chart settings from localStorage
+/**
+ * @description Loads chart settings from localStorage
+ * @returns {Object} Object containing chart title, height, and width with default values if not found
+ */
 export function loadChartSettings() {
   const savedTitle = localStorage.getItem('chartTitle');
   const savedHeight = localStorage.getItem('chartHeight');
@@ -40,25 +63,39 @@ export function loadChartSettings() {
   };
 }
 
-// Clearing input rows in localStorage
+/**
+ * @description Removes input rows data from localStorage
+ * @returns {void}
+ */
 export function clearInputRows() {
   localStorage.removeItem('inputRows');
 }
 
-// Clearing chart settings in localStorage
+/**
+ * @description Removes chart settings from localStorage
+ * @returns {void}
+ */
 export function clearChartSettings() {
   localStorage.removeItem('chartTitle');
   localStorage.removeItem('chartHeight');
   localStorage.removeItem('chartWidth');
 }
 
-// Clearing all data in localStorage
+/**
+ * @description Removes all timeline-related data from localStorage
+ * @returns {void}
+ */
 export function clearAllData() {
   clearInputRows();
   clearChartSettings();
 }
 
-// Handling file selection
+/**
+ * @description Handles file selection and initiates file reading
+ * @param {HTMLInputElement} input - File input element
+ * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
+ * @returns {void}
+ */
 export function handleFileSelect(input, inputRows) {
   const file = input.files[0];
   if (file) {
@@ -68,7 +105,12 @@ export function handleFileSelect(input, inputRows) {
   }
 }
 
-// Handling file upload
+/**
+ * @description Processes loaded CSV file data and extracts timeline information
+ * @param {Event} event - File reader load event
+ * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
+ * @returns {Object|null} Object containing chart metadata and row data, or null if parsing failed
+ */
 export function handleFileLoad(event, inputRows) {
   const csvData = event.target.result;
   const rows = csvData.trim().split('\n');
@@ -105,7 +147,12 @@ export function handleFileLoad(event, inputRows) {
   };
 }
 
-//  Convert date to MM.YYYY format
+/**
+ * @description Converts date string to MM.YYYY format
+ * @param {string} dateStr - Date string to format
+ * @returns {string} Formatted date string in MM.YYYY format or empty string if input is invalid
+ * @private
+ */
 function toMMYYYY(dateStr) {
   // Check if the string is empty or undefined
   if (!dateStr) return '';

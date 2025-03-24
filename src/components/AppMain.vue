@@ -163,6 +163,10 @@
 </template>
 
 <script>
+/**
+ * @file AppMain.vue
+ * @description Main component that handles timeline data input, visualization and management
+ */
 import { ref, computed, watch, onMounted } from 'vue'
 import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, clearChartSettings } from '../helper/utils.js';
 import { loadChart, updateChartSeries } from '../helper/chart.js';
@@ -176,26 +180,73 @@ export default {
   },
 
   setup() {
+    /**
+     * @description Load saved chart settings from localStorage
+     * @type {Object}
+     */
     const chartSettings = loadChartSettings();
+    
+    /**
+     * @description Chart title reactive reference
+     * @type {import('vue').Ref<string>}
+     */
     const title = ref(chartSettings.title);
+    
+    /**
+     * @description Chart height reactive reference
+     * @type {import('vue').Ref<string>}
+     */
     const height = ref(chartSettings.height);
+    
+    /**
+     * @description Chart width reactive reference
+     * @type {import('vue').Ref<string>}
+     */
     const width = ref(chartSettings.width);
 
+    /**
+     * @description Array of input rows for timeline data
+     * @type {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>}
+     */
     const inputRows = ref([
       {
         name: '', startTime: '', endTime: ''
       }
     ]);
+    
+    /**
+     * @description Controls visibility of additional chart settings
+     * @type {import('vue').Ref<boolean>}
+     */
     const showNewRow = ref(false);
 
+    /**
+     * @description Selected color palette for the chart
+     * @type {import('vue').Ref<string>}
+     */
     const palette = ref('palette3');
+    
+    /**
+     * @description Selected theme (light/dark) for the chart
+     * @type {import('vue').Ref<string>}
+     */
     const theme = ref('light');
 
+    /**
+     * @description Updates the chart palette
+     * @param {string} newPalette - New palette value
+     * @returns {void}
+     */
     const updatePalette = (newPalette) => {
       console.log('Parent received new palette:', newPalette);
       palette.value = newPalette;
     };
 
+    /**
+     * @description Updates the chart theme
+     * @param {string} newTheme - New theme value (light/dark)
+     * @returns {void}
+     */
     const updateTheme = (newTheme) => {
       console.log('Parent received new theme:', newTheme);
       theme.value = newTheme;
@@ -204,18 +255,30 @@ export default {
     loadChart();
 
     // buttons
+    /**
+     * @description Adds a new empty row to the input data
+     * @returns {void}
+     */
     const addRow = () => {
       inputRows.value.push({
         name: '', startTime: '',endTime: ''
       })
     }
 
+    /**
+     * @description Removes the last row from the input data
+     * @returns {void}
+     */
     const removeRows = () => {
       if (inputRows.value.length > 1) {
         inputRows.value.pop();
       }
     };
 
+    /**
+     * @description Clears all input data and resets to default values
+     * @returns {void}
+     */
     const clearAll = () => {
       inputRows.value.splice(1);
       inputRows.value[0] = {
@@ -230,7 +293,10 @@ export default {
       clearChartSettings();
     }
 
-    // upload data from file
+    /**
+     * @description Handles uploading data from a CSV file
+     * @returns {void}
+     */
     function uploadData() {
       const input = document.createElement('input');
       input.type = 'file';
@@ -258,6 +324,10 @@ export default {
       input.click();
     }
 
+    /**
+     * @description Exports current data to a CSV file and triggers download
+     * @returns {void}
+     */
     function downloadData() {
       const metadataRow = [title.value, height.value, width.value].join(',');
 
@@ -282,17 +352,28 @@ export default {
       document.body.removeChild(link);
     }
 
-    // rules
+    /**
+     * @description Validation rules for form fields
+     * @type {Object}
+     */
     const rules = {
       nameRequiredRule: value => !!value || 'Name is required',
       dateFormatRule: value => /^(0[1-9]|1[0-2])\.\d{4}$/.test(value) || 'Correct format is MM.YYYY',
       chartRequiredRule: value => !!value || 'Value is required',
     }
 
+    /**
+     * @description Computed property that checks if all required fields are filled
+     * @type {import('vue').ComputedRef<boolean>}
+     */
     const allFieldsFilled = computed(() => {
       return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
     })
 
+    /**
+     * @description Loads chart settings from localStorage
+     * @returns {Object} Object containing chart title, height, and width
+     */
     function loadChartSettings() {
       const savedTitle = localStorage.getItem('chartTitle');
       const savedHeight = localStorage.getItem('chartHeight');
@@ -306,11 +387,34 @@ export default {
     }
 
     // methods
+    /**
+     * @description Saves the current input rows and chart settings to localStorage
+     * @returns {void}
+     */
     const saveRows = () => saveInputRows(inputRows.value, title.value, height.value, width.value);
+    
+    /**
+     * @description Loads saved input rows from localStorage
+     * @returns {void}
+     */
     const loadRows = () => loadInputRows(inputRows);
+    
+    /**
+     * @description Generates the timeline chart with current data and settings
+     * @returns {void}
+     */
     const generateChart = () => updateChartSeries(inputRows, title, height, width, theme, palette);
+    
+    /**
+     * @description Toggles visibility of additional chart settings
+     * @returns {void}
+     */
     const toggleNewRow = () => showNewRow.value = !showNewRow.value;
 
+    /**
+     * @description Lifecycle hook that runs when component is mounted
+     * @returns {void}
+     */
     onMounted(() => {
       loadRows();
       // Automatically generate chart on initial load if data exists in localStorage
@@ -323,10 +427,16 @@ export default {
       }
     });
 
+    /**
+     * @description Watch for changes in input rows to save to localStorage
+     */
     watch(inputRows, () => {
       saveRows();
     }, { deep: true });
 
+    /**
+     * @description Watch for changes in chart settings to save to localStorage
+     */
     watch([title, height, width], () => {
       saveRows();
     });

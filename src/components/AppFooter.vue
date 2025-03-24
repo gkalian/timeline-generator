@@ -34,6 +34,15 @@
 </template>
 
 <script setup>
+  /**
+   * @file AppFooter.vue
+   * @description Footer component displaying author information and social links
+   */
+
+  /**
+   * @description Array of social media links to display in the footer
+   * @type {Array<{title: string, icon: string, href: string}>}
+   */
   const items = [
     {
       title: 'GitHub',
