@@ -1,4 +1,4 @@
-// chart.js - исправленная версия
+// chart.js - corrected version
 import { ref, onMounted } from 'vue';
 import ApexCharts from 'apexcharts';
 
@@ -78,9 +78,9 @@ export const loadChart = (options = defaultChartOptions) => {
 export const updateChartSeries = (inputRows, title, height, width, theme, palette) => {
     if (!chart.value) return;
 
-    console.log('inputRows: ', inputRows.value, ', title: ', title.value,
-                ', height: ', height.value, ', width: ', width.value,
-                ', palette: ', palette.value, ', theme: ', theme.value);
+    //console.log('inputRows: ', inputRows.value, ', title: ', title.value,
+    //            ', height: ', height.value, ', width: ', width.value,
+    //            ', palette: ', palette.value, ', theme: ', theme.value);
     let data = inputRows.value.map(row => {
         const [startMonth, startYear] = row.startTime.split('.');
         const [endMonth, endYear] = row.endTime.split('.');

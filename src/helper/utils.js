@@ -1,22 +1,22 @@
-// utils.js - исправленная версия
+// utils.js - corrected version
 
-// Сохранение строк ввода в localStorage
+// Saving input rows to localStorage
 export function saveInputRows(inputRows, title, height, width) {
   const inputRowsJSON = JSON.stringify(inputRows);
   localStorage.setItem('inputRows', inputRowsJSON);
 
-  // Сохраняем настройки графика, если они предоставлены
+  // Save the chart settings, if provided
   saveChartSettings(title, height, width);
 }
 
-// Сохранение настроек графика
+// Saving chart settings
 export function saveChartSettings(title, height, width) {
   if (title !== undefined) localStorage.setItem('chartTitle', title);
   if (height !== undefined) localStorage.setItem('chartHeight', height);
   if (width !== undefined) localStorage.setItem('chartWidth', width);
 }
 
-// Загрузка строк ввода из localStorage
+// Loading input rows from localStorage
 export function loadInputRows(inputRows) {
   const inputRowsJSON = localStorage.getItem('inputRows');
   if (inputRowsJSON) {
@@ -27,7 +27,7 @@ export function loadInputRows(inputRows) {
   }
 }
 
-// Загрузка настроек графика из localStorage
+// Loading chart settings from localStorage
 export function loadChartSettings() {
   const savedTitle = localStorage.getItem('chartTitle');
   const savedHeight = localStorage.getItem('chartHeight');
@@ -40,25 +40,25 @@ export function loadChartSettings() {
   };
 }
 
-// Очистка строк ввода в localStorage
+// Clearing input rows in localStorage
 export function clearInputRows() {
   localStorage.removeItem('inputRows');
 }
 
-// Очистка настроек графика в localStorage
+// Clearing chart settings in localStorage
 export function clearChartSettings() {
   localStorage.removeItem('chartTitle');
   localStorage.removeItem('chartHeight');
   localStorage.removeItem('chartWidth');
 }
 
-// Очистка всех данных в localStorage
+// Clearing all data in localStorage
 export function clearAllData() {
   clearInputRows();
   clearChartSettings();
 }
 
-// Обработка выбора файла
+// Handling file selection
 export function handleFileSelect(input, inputRows) {
   const file = input.files[0];
   if (file) {
@@ -68,23 +68,23 @@ export function handleFileSelect(input, inputRows) {
   }
 }
 
-// Обработка загрузки файла
+// Handling file upload
 export function handleFileLoad(event, inputRows) {
   const csvData = event.target.result;
   const rows = csvData.trim().split('\n');
 
-  // Проверяем, есть ли хотя бы одна строка
+  // Check if there is at least one row
   if (rows.length === 0) return null;
 
-  // Парсим метаданные графика из первой строки
+  // Parse chart metadata from the first row
   const chartMetadata = rows[0].replace(/\r/g, '').split(',');
 
-  // Извлекаем метаданные (предполагаем, что в первой строке всегда метаданные)
+  // Extract metadata (assuming the first row always contains metadata)
   const chartTitle = chartMetadata[0] || 'Timeline';
   const chartHeight = chartMetadata[1] || '400';
   const chartWidth = chartMetadata[2] || '900';
 
-  // Обрабатываем оставшиеся строки как строки данных
+  // Process remaining rows as data rows
   const dataRows = rows.slice(1).map(row => {
     const [name, start, end] = row.replace(/\r/g, '').split(',');
     const startTime = toMMYYYY(start);
@@ -96,7 +96,7 @@ export function handleFileLoad(event, inputRows) {
     };
   });
 
-  // Возвращаем метаданные и строки данных
+  // Return chart metadata and data rows
   return {
     chartTitle,
     chartHeight,
@@ -105,9 +105,9 @@ export function handleFileLoad(event, inputRows) {
   };
 }
 
-// Преобразование даты в формат ММ.ГГГГ
+//  Convert date to MM.YYYY format
 function toMMYYYY(dateStr) {
-  // Проверяем, является ли строка пустой или неопределенной
+  // Check if the string is empty or undefined
   if (!dateStr) return '';
 
   const [month, year] = dateStr.split('.');
