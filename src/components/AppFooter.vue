@@ -46,10 +46,10 @@
 <style scoped>
 .footer {
   background-color: var(--v-theme-background) !important;
+  margin-top: -50px;
 }
 
 .footer-text{
-  position: fixed;
   bottom: 0;
   width: 100%;
   padding: 8px;
