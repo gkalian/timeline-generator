@@ -1,23 +1,25 @@
 <template>
-  <v-footer height="40" app class="d-flex align-center justify-center text-caption text-disabled ml-4">
-    <div>
-
-        <a
-          class="text-decoration-none on-surface"
-          href="http://gkalian.com"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <span class="d-none d-sm-inline-block text-disabled"> gkalian</span>
-        </a>
-        &copy; {{ (new Date()).getFullYear() }}
+  <v-footer
+    class="d-flex align-center justify-center ga-2 flex-wrap flex-grow-1 py-3 footer"
+  >
+    <div
+      class="flex-1-0-100 text-center mt-2 footer-text"
+    >
+    <a
+        class="author-link"
+        href="http://gkalian.com"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <span>gkalian</span>
+      </a>, &copy; {{ (new Date()).getFullYear() }}
 
       <a
         v-for="item in items"
         :key="item.title"
         :href="item.href"
         :title="item.title"
-        class="d-inline-block mx-2 social-link"
+        class="social-link"
         rel="noopener noreferrer"
         target="_blank"
       >
@@ -25,7 +27,7 @@
           :icon="item.icon"
           :size="item.icon === '$vuetify' ? 24 : 16"
         />
-      </a>        
+      </a>
 
     </div>
   </v-footer>
@@ -37,16 +39,45 @@
       title: 'GitHub',
       icon: `mdi-github`,
       href: 'https://github.com/gkalian',
-    },    
+    },
   ]
 </script>
 
-<style scoped lang="sass">
-  .social-link :deep(.v-icon)
-    color: rgba(var(--v-theme-on-background), var(--v-disabled-opacity))
+<style scoped>
+.footer {
+  background-color: var(--v-theme-background) !important;
+}
 
-    transition: .2s ease-in-out
+.footer-text{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+  font-family: inherit;
+  color: rgba(57, 57, 57, 0.8);
+  transition: all 0.3s;
+}
 
-    &:hover
-      color: rgba(25, 118, 210, 1)
+.footer-text:hover, .social-link:hover :deep(.v-icon) {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.author-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgba(57, 57, 57, 0.8);
+}
+
+.social-link :deep(.v-icon) {
+  color: inherit;
+}
+
 </style>

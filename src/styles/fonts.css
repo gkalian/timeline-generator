@@ -1,0 +1,72 @@
+/* Import Manrope font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+/* Base font family */
+:root {
+  --font-family-base: 'Barriecito', system-ui, -apple-system, sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  
+  --font-size-caption: 0.75rem;
+  --font-size-body: 1rem;
+  --font-size-subtitle: 1.25rem;
+  --font-size-title: 1.5rem;
+  --font-size-h5: 1.5rem;
+  
+  --line-height-normal: 1.5;
+  --line-height-compact: 1.2;
+}
+
+/* Apply font family to body and all elements */
+body {
+  font-family: var(--font-family-base) !important;
+}
+
+/* Ensure all elements inherit the font */
+* {
+  font-family: inherit !important;
+}
+
+/* Override Vuetify typography classes */
+.v-application .text-h5,
+.v-application .text-caption,
+.v-application .text-disabled,
+.v-application .v-footer,
+.v-application .v-btn,
+.v-application .v-text-field {
+  font-family: var(--font-family-base) !important;
+}
+
+/* Specifically target the header and footer */
+.header .text-h5,
+.v-footer,
+.v-footer * {
+  font-family: var(--font-family-base) !important;
+}
+
+/* Date Picker Styles */
+.dp__theme_light {
+  --dp-font-family: var(--font-family-base);
+  --dp-text-color: #fff;
+  --dp-background-color: #121212;
+  --dp-primary-color: #212121;
+  --dp-border-color: transparent;
+  --dp-action-button-height: 34px;
+}
+
+/* Typography utility classes */
+.font-weight-light {
+  font-weight: var(--font-weight-light);
+}
+
+.text-caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-compact);
+}
+
+.text-h5 {
+  font-size: var(--font-size-h5);
+  line-height: var(--line-height-compact);
+}

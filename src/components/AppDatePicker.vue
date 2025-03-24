@@ -37,7 +37,7 @@ props: {
         required: true,
     },
     rules: {
-        type: Array, 
+        type: Array,
         required: true,
     },
 },
@@ -67,7 +67,7 @@ setup(props, { emit }) {
     return {
         value,
         updateTime,
-        toMMYYYY,        
+        toMMYYYY,
     };
     },
 };

@@ -40,7 +40,7 @@
 
         <v-row class="optional-elements" wrap>
           <v-col cols="12" md="7" class="d-flex flex-wrap align-center justify-start">
-            <v-text-field class="mr-3 mb-3" style="max-width: 250px; min-width: 200px;"
+            <v-text-field class="mr-3 mb-3 title-field"
               v-model="title"
               label="Title"
               :rules=[rules.chartRequiredRule]
@@ -52,7 +52,7 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3 mb-3" style="max-width: 250px; min-width: 150px;"
+            <v-text-field class="mr-3 mb-3 dimension-field"
               v-model="height"
               label="Height (px)"
               :rules=[rules.chartRequiredRule]
@@ -64,7 +64,7 @@
             >
             </v-text-field>
 
-            <v-text-field class="mr-3 mb-3" style="max-width: 250px; min-width: 150px;"
+            <v-text-field class="mr-3 mb-3 dimension-field"
               v-model="width"
               label="Width (px)"
               :rules=[rules.chartRequiredRule]
@@ -334,7 +334,16 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.title-field {
+  max-width: 250px;
+  min-width: 200px;
+}
+
+.dimension-field {
+  max-width: 250px;
+  min-width: 150px;
+}
 
 .chart-container {
   width: 100%;
@@ -348,7 +357,7 @@ export default {
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0;
+  padding: 5;
   justify-content: center;
 }
 
@@ -361,19 +370,10 @@ export default {
   display: flex;
   justify-content: center;
 }
+</style>
 
-
+<style>
 html, body {
   overflow-x: auto;
 }
-
-.dp__theme_light {
-  --dp-font-family: 'Roboto', sans-serif;
-  --dp-text-color: #fff;
-  --dp-background-color: #121212;
-  --dp-primary-color: #212121;
-  --dp-border-color: transparent;
-  --dp-action-button-height: 34px;
-}
-
 </style>

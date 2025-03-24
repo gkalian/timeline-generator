@@ -1,5 +1,10 @@
 ## Changelog
 
+### v1.6.2
+  - styling
+  - footer changes
+  - update dependencies
+
 ### v1.6.1
   - correct clean button behavior
 
