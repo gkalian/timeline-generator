@@ -313,6 +313,14 @@ export default {
 
     onMounted(() => {
       loadRows();
+      // Automatically generate chart on initial load if data exists in localStorage
+      if (localStorage.getItem('inputRows') &&
+          inputRows.value.length > 0 &&
+          inputRows.value.every(row => row.name && row.startTime && row.endTime) &&
+          height.value &&
+          width.value) {
+        generateChart();
+      }
     });
 
     watch(inputRows, () => {
