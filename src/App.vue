@@ -1,11 +1,9 @@
 <template>
   <v-app>
-    
     <v-main>
       <AppMain />
+      <AppFooter />
     </v-main>
-
-    <AppFooter />
   </v-app>
 </template>
 

@@ -5,7 +5,7 @@
       max-width="2048"
     >
       <div class="header">
-        <div class="text-center text-h5 font-weight-light mb-n1">Input your data</div>
+        <div class="text-center text-h5 font-weight-light mb-n1 mt-4">Input your data</div>
         <br/>
       </div>
 

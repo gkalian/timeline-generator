@@ -1,9 +1,10 @@
 <template>
   <v-footer
-    class="d-flex align-center justify-center ga-2 flex-wrap flex-grow-1 py-3 footer"
+    app
+    class="d-flex align-center justify-center py-3 footer"
   >
     <div
-      class="flex-1-0-100 text-center mt-2 footer-text"
+      class="text-center mt-2 footer-text"
     >
     <a
         class="author-link"
