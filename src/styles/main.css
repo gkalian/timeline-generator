@@ -60,6 +60,12 @@ html, body {
   --dp-action-button-height: 34px;
 }
 
+/* Ensure datepicker shows above container */
+.dp__outer_menu_wrap {
+  z-index: 10000 !important;
+}
+
+
 /* Typography utility classes */
 .font-weight-light {
   font-weight: var(--font-weight-light);

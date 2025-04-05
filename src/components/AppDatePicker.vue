@@ -1,5 +1,10 @@
 <template>
-    <VueDatePicker @update:model-value="updateTime" month-picker>
+    <VueDatePicker 
+        @update:model-value="updateTime" 
+        month-picker 
+        position="left"
+        :teleport="true"
+    >
         <template #trigger>
         <v-text-field
             v-model="value"
