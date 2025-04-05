@@ -9,174 +9,28 @@
         <br/>
       </div>
 
-        <v-row class="main-input-fields" v-for="(row, index) in inputRows" :key="index" dense wrap>
-          <v-col cols="12" sm="12" md="4">
-            <v-text-field
-              v-model="row.name"
-              label="Name"
-              :rules=[rules.nameRequiredRule]
-              variant="outlined"
-              required
-              clearable
-            ></v-text-field>
-          </v-col>
+      <InputFieldsRow
+        v-model="inputRows"
+      />
 
-          <v-col cols="12" sm="12" md="4">
-            <v-text-field
-              v-model="row.comment"
-              label="Comment"
-              variant="outlined"
-              clearable
-              disabled
-            ></v-text-field>
-          </v-col>
+      <ChartHeader
+        v-model="inputRows"
+        v-model:title="title"
+        v-model:height="height"
+        v-model:width="width"
+        @add-row="addRow"
+        @remove-rows="removeRows"
+        @clear-all="clearAll"
+      />
 
-          <v-col cols="12" sm="6" md="2">
-            <AppDatePicker
-              v-model="row.startTime"
-              :label="'Start time'"
-              :rules=[rules.dateFormatRule]
-              dense
-            />
-          </v-col>
+      <ChartContainer
+        :input-rows="inputRows"
+        :title="title"
+        :height="height"
+        :width="width"
+      />
 
-          <v-col cols="12" sm="6" md="2">
-            <AppDatePicker
-              v-model="row.endTime"
-              :label="'End time'"
-              :rules=[rules.dateFormatRule]
-              dense
-            />
-          </v-col>
-        </v-row>
-
-        <v-row class="optional-elements" wrap>
-          <v-col cols="12" md="7" class="d-flex flex-wrap align-center justify-start">
-            <v-text-field class="mr-3 mb-3 title-field"
-              v-model="title"
-              label="Title"
-              :rules=[rules.chartRequiredRule]
-              variant="outlined"
-              hide-details
-              required
-              clearable
-              density="compact"
-            >
-            </v-text-field>
-
-            <v-text-field class="mr-3 mb-3 dimension-field"
-              v-model="height"
-              label="Height (px)"
-              :rules=[rules.chartRequiredRule]
-              variant="outlined"
-              hide-details
-              required
-              clearable
-              density="compact"
-            >
-            </v-text-field>
-
-            <v-text-field class="mr-3 mb-3 dimension-field"
-              v-model="width"
-              label="Width (px)"
-              :rules=[rules.chartRequiredRule]
-              variant="outlined"
-              hide-details
-              required
-              clearable
-              density="compact"
-            >
-            </v-text-field>
-          </v-col>
-
-          <v-col cols="12" md="5" class="d-flex flex-wrap align-center justify-start justify-md-end">
-            <v-btn class="mr-3 mb-3"
-              v-on:click="addRow"
-              title="Add row"
-              dark
-              bottom
-            >
-              <v-icon>mdi-plus-thick</v-icon>
-            </v-btn>
-
-            <v-btn class="mr-3 mb-3"
-              :disabled="inputRows.length < 2"
-              v-on:click="removeRows"
-              title="Remove row"
-              dark
-              bottom
-            >
-            <v-icon>mdi-minus-thick</v-icon>
-            </v-btn>
-
-            <v-btn class="mr-3 mb-3"
-              :disabled="inputRows.length < 2"
-              v-on:click="clearAll"
-              title="Clear all"
-              dark
-              bottom
-            >
-            <v-icon>mdi-close-thick</v-icon>
-            </v-btn>
-
-            <v-btn class="mr-3 mb-3"
-              v-on:click="uploadData"
-              title="Upload data"
-              dark
-              bottom
-            >
-            <v-icon>mdi-upload</v-icon>
-            </v-btn>
-
-            <v-btn class="mr-3 mb-3"
-              v-on:click="downloadData"
-              title="Download data"
-              dark
-              bottom
-            >
-            <v-icon>mdi-download</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-
-        <v-row class="mt-n3">
-          <v-col cols="12" class="d-flex justify-end">
-            <v-btn v-on:click="toggleNewRow" disabled>{{ showNewRow ? 'Less' : 'More' }} settings</v-btn>
-          </v-col>
-        </v-row>
-
-        <v-row v-show="showNewRow" class="chart-settings">
-          <AppChartSettings
-            :initial-palette="palette"
-            :initial-show-labels="showLabels"
-            :initial-show-legend="showLegend"
-            @update:palette="updatePalette"
-            @update:show-labels="updateShowLabels"
-            @update:show-legend="updateShowLegend"
-          />
-        </v-row>
-
-        <v-row class="generate-button">
-          <v-col class="d-flex justify-center">
-            <v-btn
-                :disabled="!allFieldsFilled"
-                v-on:click="generateChart"
-                title="Generate chart"
-                dark
-                bottom
-              >
-                Generate timeline
-            </v-btn>
-          </v-col>
-        </v-row>
-
-        <v-row class="chart-container">
-          <v-col cols="12" class="chart-wrapper">
-            <div id="chart" class="chart-element"></div>
-          </v-col>
-        </v-row>
-
-      </v-responsive>
+    </v-responsive>
   </v-container>
 </template>
 
@@ -185,335 +39,109 @@
  * @file AppMain.vue
  * @description Main component that handles timeline data input, visualization and management
  */
-import { ref, computed, watch, onMounted } from 'vue'
-import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, clearChartSettings } from '../helper/utils.js';
-import { loadChart, updateChartSeries, defaultChartOptions } from '../helper/chart.js';
-import AppDatePicker from './AppDatePicker.vue';
-import AppChartSettings from './AppChartSettings.vue';
+import { ref, onMounted, watch } from 'vue'
+import { saveInputRows, saveChartSettings, clearInputRows, clearChartSettings, loadChartSettings, loadInputRows } from '../helper/utils.js';
+import { updateChartSeries } from '../helper/chart.js';
+import InputFieldsRow from './InputFieldsRow.vue';
+import ChartHeader from './ChartHeader.vue';
+import ChartContainer from './ChartContainer.vue';
 
 export default {
   components: {
-    AppDatePicker,
-    AppChartSettings
+    InputFieldsRow,
+    ChartHeader,
+    ChartContainer
   },
 
   setup() {
-    /**
-     * @description Load saved chart settings from localStorage
-     * @type {Object}
-     */
     const chartSettings = loadChartSettings();
-    
-    /**
-     * @description Chart title reactive reference
-     * @type {import('vue').Ref<string>}
-     */
-    const title = ref(chartSettings.title);
-    
-    /**
-     * @description Chart height reactive reference
-     * @type {import('vue').Ref<string>}
-     */
-    const height = ref(chartSettings.height);
-    
-    /**
-     * @description Chart width reactive reference
-     * @type {import('vue').Ref<string>}
-     */
-    const width = ref(chartSettings.width);
+    const title = ref('Timeline');
+    const height = ref('400');
+    const width = ref('900');
+    const palette = ref('palette1');
+    //const showLabels = ref(true);
+    //const showLegend = ref(true);
+    const inputRows = ref([{ name: '', startTime: '', endTime: '', comment: '' }]);
 
-    /**
-     * @description Array of input rows for timeline data
-     * @type {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>}
-     */
-    const inputRows = ref([
-      {
-        name: '', startTime: '', endTime: ''
-      }
-    ]);
-    
-    /**
-     * @description Controls visibility of additional chart settings
-     * @type {import('vue').Ref<boolean>}
-     */
-    const showNewRow = ref(false);
-
-    /**
-     * @description Selected color palette for the chart
-     * @type {import('vue').Ref<string>}
-     */
-    const palette = ref('palette3');
-
-    /**
-     * @description Controls visibility of data labels in the chart
-     * @type {import('vue').Ref<boolean>}
-     */
-    const showLabels = ref(false);
-
-    /**
-     * @description Controls visibility of legend in the chart
-     * @type {import('vue').Ref<boolean>}
-     */
-    const showLegend = ref(false);
-
-    // Force initial values to be false
-    showLabels.value = false;
-    showLegend.value = false;
-
-    /**
-     * @description Updates the chart palette
-     * @param {string} newPalette - New palette value
-     * @returns {void}
-     */
-    const updatePalette = (newPalette) => {
-      console.log('Parent received new palette:', newPalette);
-      palette.value = newPalette;
-      updateChartSeries(inputRows, title, height, width, palette);
-    };
-
-    /**
-     * @description Updates the data labels visibility
-     * @param {boolean} newShowLabels - New show labels value
-     * @returns {void}
-     */
-    const updateShowLabels = (newShowLabels) => {
-      console.log('Parent received new showLabels:', newShowLabels);
-      showLabels.value = newShowLabels;
-      updateChartSeries(inputRows, title, height, width, palette);
-    };
-
-    /**
-     * @description Updates the legend visibility
-     * @param {boolean} newShowLegend - New show legend value
-     * @returns {void}
-     */
-    const updateShowLegend = (newShowLegend) => {
-      console.log('Parent received new showLegend:', newShowLegend);
-      showLegend.value = newShowLegend;
-      updateChartSeries(inputRows, title, height, width, palette);
-    };
-
-    // Initialize chart with default theme and current palette
-    const initialOptions = {
-      ...defaultChartOptions,
-      theme: {
-        mode: 'light',
-        palette: palette.value
-      },
-      legend: {
-        //show: showLegend.value,
-        show: false,
-        position: 'bottom',
-        fontSize: '14px',
-        fontFamily: 'Roboto, sans-serif'
-      },
-      dataLabels: {
-        //enabled: showLabels.value
-        enabled: false
-      }
-    };
-    loadChart(initialOptions);
-
-    // buttons
-    /**
-     * @description Adds a new empty row to the input data
-     * @returns {void}
-     */
-    const addRow = () => {
-      inputRows.value.push({
-        name: '', startTime: '',endTime: ''
-      })
+    // Load saved settings and data if available
+    if (chartSettings) {
+      if (chartSettings.title) title.value = chartSettings.title;
+      if (chartSettings.height) height.value = chartSettings.height;
+      if (chartSettings.width) width.value = chartSettings.width;
     }
 
-    /**
-     * @description Removes the last row from the input data
-     * @returns {void}
-     */
+    // Load saved input rows
+    console.log('Before loading:', inputRows.value);
+    loadInputRows(inputRows);
+    console.log('After loading:', inputRows.value);
+
+    const addRow = () => {
+      inputRows.value.push({ name: '', startTime: '', endTime: '', comment: '' });
+    }
+
     const removeRows = () => {
       if (inputRows.value.length > 1) {
         inputRows.value.pop();
       }
-    };
+    }
 
-    /**
-     * @description Clears all input data and resets to default values
-     * @returns {void}
-     */
     const clearAll = () => {
       inputRows.value.splice(1);
-      inputRows.value[0] = {
-        name: '', startTime: '',endTime: ''
-      };
-
+      inputRows.value[0] = { name: '', startTime: '', endTime: '', comment: '' };
       title.value = 'Timeline';
       height.value = '400';
       width.value = '900';
-
       clearInputRows();
       clearChartSettings();
     }
 
-    /**
-     * @description Handles uploading data from a CSV file
-     * @returns {void}
-     */
-    function uploadData() {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.csv';
-      input.onchange = () => {
-        const file = input.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            const result = handleFileLoad(event, inputRows);
-
-            if (result) {
-              title.value = result.chartTitle || 'Timeline';
-              height.value = result.chartHeight || '400';
-              width.value = result.chartWidth || '900';
-              inputRows.value = result.rows;
-              saveChartSettings(title.value, height.value, width.value);
-              saveRows();
-            }
-            saveRows();
-          };
-          reader.readAsText(file);
-        }
-      };
-      input.click();
-    }
-
-    /**
-     * @description Exports current data to a CSV file and triggers download
-     * @returns {void}
-     */
-    function downloadData() {
-      const metadataRow = [title.value, height.value, width.value].join(',');
-
-      const dataRows = inputRows.value.map(row => {
-        return [
-          row.name,
-          //row.comment,
-          row.startTime,
-          row.endTime
-        ].join(',');
-      }).join('\n');
-
-      const csvContent = metadataRow + '\n' + dataRows;
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-
-      link.href = url;
-      link.setAttribute('download', `${title.value || 'timeline'}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    /**
-     * @description Validation rules for form fields
-     * @type {Object}
-     */
-    const rules = {
-      nameRequiredRule: value => !!value || 'Name is required',
-      dateFormatRule: value => /^(0[1-9]|1[0-2])\.\d{4}$/.test(value) || 'Correct format is MM.YYYY',
-      chartRequiredRule: value => !!value || 'Value is required',
-    }
-
-    /**
-     * @description Computed property that checks if all required fields are filled
-     * @type {import('vue').ComputedRef<boolean>}
-     */
-    const allFieldsFilled = computed(() => {
-      return (inputRows.value.every((row) => row.name && row.startTime && row.endTime) && height.value && width.value);
-    })
-
-    /**
-     * @description Loads chart settings from localStorage
-     * @returns {Object} Object containing chart title, height, and width
-     */
-    function loadChartSettings() {
-      const savedTitle = localStorage.getItem('chartTitle');
-      const savedHeight = localStorage.getItem('chartHeight');
-      const savedWidth = localStorage.getItem('chartWidth');
-
-      return {
-        title: savedTitle || 'Timeline',
-        height: savedHeight || '400',
-        width: savedWidth || '900'
-      };
-    }
-
-    // methods
-    /**
-     * @description Saves the current input rows and chart settings to localStorage
-     * @returns {void}
-     */
-    const saveRows = () => saveInputRows(inputRows.value, title.value, height.value, width.value);
-    
-    /**
-     * @description Loads saved input rows from localStorage
-     * @returns {void}
-     */
-    const loadRows = () => loadInputRows(inputRows);
+    // Load saved data on mount
     
     /**
      * @description Generates the timeline chart with current data and settings
      * @returns {void}
      */
-    const generateChart = () => updateChartSeries(inputRows, title, height, width, palette, showLabels, showLegend);
+    const generateChart = () => updateChartSeries(inputRows, title, height, width, palette);
     
-    /**
-     * @description Toggles visibility of additional chart settings
-     * @returns {void}
-     */
-    const toggleNewRow = () => {
-      showNewRow.value = !showNewRow.value;
-      console.log('Toggled settings visibility:', showNewRow.value);
-    };
-
     /**
      * @description Lifecycle hook that runs when component is mounted
      * @returns {void}
      */
     onMounted(() => {
-      loadRows();
-      // Automatically generate chart on initial load if data exists in localStorage
-      if (localStorage.getItem('inputRows') &&
-          inputRows.value.length > 0 &&
-          inputRows.value.every(row => row.name && row.startTime && row.endTime) &&
-          height.value &&
-          width.value) {
-        generateChart();
-      }
+      console.log('Component mounted, current data:', inputRows.value);
+      // Add a small delay to ensure data is loaded
+      setTimeout(() => {
+        if (inputRows.value.length > 0 && 
+            inputRows.value[0].name && // Check if we have actual data, not just empty row
+            title.value &&
+            height.value &&
+            width.value) {
+          generateChart();
+        }
+      }, 100);
     });
 
-    /**
-     * @description Watch for changes in input rows to save to localStorage
-     */
+    // Watch for changes in input rows to save to localStorage
     watch(inputRows, () => {
-      saveRows();
+      saveInputRows(inputRows.value);
     }, { deep: true });
 
-    /**
-     * @description Watch for changes in chart settings to save to localStorage
-     */
+    // Watch for changes in chart settings to save to localStorage
     watch([title, height, width], () => {
-      saveRows();
+      saveChartSettings(title.value, height.value, width.value);
     });
 
     return {
-      inputRows, title, height, width,
-      palette, updatePalette,
-      showLabels, updateShowLabels,
-      showLegend, updateShowLegend,
-      addRow, removeRows, clearAll, uploadData, downloadData,
-      rules, allFieldsFilled,
-      showNewRow, toggleNewRow,
-      generateChart
+      inputRows,
+      title,
+      height,
+      width,
+      palette,
+      //showLabels,
+      //showLegend,
+      addRow,
+      removeRows,
+      clearAll
     }
   },
 }
@@ -530,35 +158,4 @@ export default {
   min-width: 150px;
 }
 
-.chart-container {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.chart-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 5;
-  justify-content: center;
-}
-
-.chart-element {
-  min-width: 100%;
-  height: auto;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-}
-</style>
-
-<style>
-html, body {
-  overflow-x: auto;
-}
 </style>

@@ -131,15 +131,21 @@ export const loadChart = (options = defaultChartOptions) => {
 export const updateChartSeries = (inputRows, title, height, width, palette, showLabels, showLegend) => {
     if (!chart.value) return;
 
+    const inputRowsValue = inputRows?.value ?? inputRows;
+    const titleValue = title?.value ?? title;
+    const heightValue = height?.value ?? height;
+    const widthValue = width?.value ?? width;
+    const paletteValue = palette?.value ?? palette;
+
     console.log('Updating chart with:', {
-        inputRows: inputRows.value,
-        title: title.value,
-        height: height.value,
-        width: width.value,
-        palette: palette.value
+        inputRows: inputRowsValue,
+        title: titleValue,
+        height: heightValue,
+        width: widthValue,
+        palette: paletteValue
     });
 
-    let data = inputRows.value.map(row => {
+    let data = inputRowsValue.map(row => {
         const [startMonth, startYear] = row.startTime.split('.');
         const [endMonth, endYear] = row.endTime.split('.');
 
@@ -158,28 +164,26 @@ export const updateChartSeries = (inputRows, title, height, width, palette, show
     // Update all options at once
     chart.value.updateOptions({
         theme: {
-            palette: palette.value
+            palette: paletteValue
         },
         title: {
-            text: title.value
+            text: titleValue
         },
         chart: {
-            height: height.value,
-            width: width.value
+            height: heightValue,
+            width: widthValue
         },
         plotOptions: {
             bar: {
                 dataLabels: {
-                    //enabled: showLabels,
-                    enabled: false,
+                    enabled: showLabels,
                     hideOverflowingLabels: true,
                     position: 'bottom'
                 }
             }
         },
         dataLabels: {
-            //enabled: showLabels,
-            enabled: false,
+            enabled: showLabels,
             hideOverflowingLabels: true
         },
         legend: {

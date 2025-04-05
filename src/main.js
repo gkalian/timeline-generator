@@ -16,7 +16,7 @@ import VueApexCharts from "vue3-apexcharts";
 import VueDatePicker from '@vuepic/vue-datepicker';
 
 // Global styles
-import './styles/fonts.css';
+import './styles/main.css';
 
 /**
  * Initialize and bootstrap the Vue application

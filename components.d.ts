@@ -12,5 +12,8 @@ declare module 'vue' {
     AppDatePicker: typeof import('./src/components/AppDatePicker.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppMain: typeof import('./src/components/AppMain.vue')['default']
+    ChartContainer: typeof import('./src/components/ChartContainer.vue')['default']
+    ChartHeader: typeof import('./src/components/ChartHeader.vue')['default']
+    InputFieldsRow: typeof import('./src/components/InputFieldsRow.vue')['default']
   }
 }

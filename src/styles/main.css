@@ -24,6 +24,10 @@ body {
   font-family: var(--font-family-base) !important;
 }
 
+html, body {
+  overflow-x: auto;
+}
+
 /* Ensure all elements inherit the font */
 * {
   font-family: inherit !important;

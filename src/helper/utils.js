@@ -108,10 +108,9 @@ export function handleFileSelect(input, inputRows) {
 /**
  * @description Processes loaded CSV file data and extracts timeline information
  * @param {Event} event - File reader load event
- * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
  * @returns {Object|null} Object containing chart metadata and row data, or null if parsing failed
  */
-export function handleFileLoad(event, inputRows) {
+export function handleFileLoad(event) {
   const csvData = event.target.result;
   const rows = csvData.trim().split('\n');
 
