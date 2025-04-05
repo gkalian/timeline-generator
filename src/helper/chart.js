@@ -41,9 +41,29 @@ export const defaultChartOptions = {
     },
     plotOptions: {
         bar: {
-        distributed: true,
-        horizontal: true,
-        barHeight: '30%'
+            distributed: true,
+            horizontal: true,
+            barHeight: '30%',
+            dataLabels: {
+                position: 'bottom'
+            }
+        }
+    },
+    dataLabels: {
+        enabled: false,
+        style: {
+            colors: ['#333'],
+            fontSize: '12px',
+            fontWeight: 'bold'
+        },
+        background: {
+            enabled: true,
+            foreColor: '#fff',
+            borderRadius: 2,
+            padding: 4,
+            opacity: 0.9,
+            borderWidth: 1,
+            borderColor: '#fff'
         }
     },
     xaxis: {
@@ -60,8 +80,13 @@ export const defaultChartOptions = {
         }
     },
     theme: {
-        mode: 'light',
         palette: 'palette3'
+    },
+    legend: {
+        show: false,
+        position: 'bottom',
+        fontSize: '14px',
+        fontFamily: 'Roboto, sans-serif'
     },
     series: [
         {
@@ -97,16 +122,20 @@ export const loadChart = (options = defaultChartOptions) => {
  * @param {import('vue').Ref<string>} title - Chart title
  * @param {import('vue').Ref<string>} height - Chart height in pixels
  * @param {import('vue').Ref<string>} width - Chart width in pixels
- * @param {import('vue').Ref<string>} theme - Chart theme (light/dark)
  * @param {import('vue').Ref<string>} palette - Chart color palette
  * @returns {void}
  */
-export const updateChartSeries = (inputRows, title, height, width, theme, palette) => {
+export const updateChartSeries = (inputRows, title, height, width, palette, showLabels, showLegend) => {
     if (!chart.value) return;
 
-    //console.log('inputRows: ', inputRows.value, ', title: ', title.value,
-    //            ', height: ', height.value, ', width: ', width.value,
-    //            ', palette: ', palette.value, ', theme: ', theme.value);
+    console.log('Updating chart with:', {
+        inputRows: inputRows.value,
+        title: title.value,
+        height: height.value,
+        width: width.value,
+        palette: palette.value
+    });
+
     let data = inputRows.value.map(row => {
         const [startMonth, startYear] = row.startTime.split('.');
         const [endMonth, endYear] = row.endTime.split('.');
@@ -123,14 +152,11 @@ export const updateChartSeries = (inputRows, title, height, width, theme, palett
         };
     });
 
-    chart.value.updateSeries([
-        {
-            name: "",
-            data: data
-        }
-    ]);
-
+    // Update all options at once
     chart.value.updateOptions({
+        theme: {
+            palette: palette.value
+        },
         title: {
             text: title.value
         },
@@ -138,9 +164,17 @@ export const updateChartSeries = (inputRows, title, height, width, theme, palett
             height: height.value,
             width: width.value
         },
-        theme: {
-            mode: theme.value,
-            palette: palette.value
+        dataLabels: {
+            enabled: showLabels
         },
-    });
+        legend: {
+            show: showLegend
+        }
+    }, false, true); // false = don't redraw yet, true = update colors
+
+    // Then update the series data
+    chart.value.updateSeries([{
+        name: "",
+        data: data
+    }]);
 };

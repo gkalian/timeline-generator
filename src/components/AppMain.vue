@@ -10,7 +10,7 @@
       </div>
 
         <v-row class="main-input-fields" v-for="(row, index) in inputRows" :key="index" dense wrap>
-          <v-col cols="12" sm="12" md="4" class="pr-md-3">
+          <v-col cols="12" sm="12" md="4">
             <v-text-field
               v-model="row.name"
               label="Name"
@@ -21,19 +21,31 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="6" md="4" class="pr-md-3">
+          <v-col cols="12" sm="12" md="4">
+            <v-text-field
+              v-model="row.comment"
+              label="Comment"
+              variant="outlined"
+              clearable
+              disabled
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="12" sm="6" md="2">
             <AppDatePicker
               v-model="row.startTime"
               :label="'Start time'"
               :rules=[rules.dateFormatRule]
+              dense
             />
           </v-col>
 
-          <v-col cols="12" sm="6" md="4" class="pr-md-3">
+          <v-col cols="12" sm="6" md="2">
             <AppDatePicker
               v-model="row.endTime"
               :label="'End time'"
               :rules=[rules.dateFormatRule]
+              dense
             />
           </v-col>
         </v-row>
@@ -75,8 +87,6 @@
               density="compact"
             >
             </v-text-field>
-
-            <v-btn class="mb-3" :disabled="true" @click="toggleNewRow">{{ showNewRow ? 'Less' : 'More' }} settings</v-btn>
           </v-col>
 
           <v-col cols="12" md="5" class="d-flex flex-wrap align-center justify-start justify-md-end">
@@ -129,12 +139,20 @@
           </v-col>
         </v-row>
 
+        <v-row class="mt-n3">
+          <v-col cols="12" class="d-flex justify-end">
+            <v-btn v-on:click="toggleNewRow" disabled>{{ showNewRow ? 'Less' : 'More' }} settings</v-btn>
+          </v-col>
+        </v-row>
+
         <v-row v-show="showNewRow" class="chart-settings">
           <AppChartSettings
             :initial-palette="palette"
-            :initial-theme="theme"
+            :initial-show-labels="showLabels"
+            :initial-show-legend="showLegend"
             @update:palette="updatePalette"
-            @update:theme="updateTheme"
+            @update:show-labels="updateShowLabels"
+            @update:show-legend="updateShowLegend"
           />
         </v-row>
 
@@ -169,7 +187,7 @@
  */
 import { ref, computed, watch, onMounted } from 'vue'
 import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, clearChartSettings } from '../helper/utils.js';
-import { loadChart, updateChartSeries } from '../helper/chart.js';
+import { loadChart, updateChartSeries, defaultChartOptions } from '../helper/chart.js';
 import AppDatePicker from './AppDatePicker.vue';
 import AppChartSettings from './AppChartSettings.vue';
 
@@ -225,12 +243,18 @@ export default {
      * @type {import('vue').Ref<string>}
      */
     const palette = ref('palette3');
-    
+
     /**
-     * @description Selected theme (light/dark) for the chart
-     * @type {import('vue').Ref<string>}
+     * @description Controls visibility of data labels in the chart
+     * @type {import('vue').Ref<boolean>}
      */
-    const theme = ref('light');
+    const showLabels = ref(false);
+
+    /**
+     * @description Controls visibility of legend in the chart
+     * @type {import('vue').Ref<boolean>}
+     */
+    const showLegend = ref(false);
 
     /**
      * @description Updates the chart palette
@@ -240,19 +264,49 @@ export default {
     const updatePalette = (newPalette) => {
       console.log('Parent received new palette:', newPalette);
       palette.value = newPalette;
+      updateChartSeries(inputRows, title, height, width, palette, showLabels);
     };
 
     /**
-     * @description Updates the chart theme
-     * @param {string} newTheme - New theme value (light/dark)
+     * @description Updates the data labels visibility
+     * @param {boolean} newShowLabels - New show labels value
      * @returns {void}
      */
-    const updateTheme = (newTheme) => {
-      console.log('Parent received new theme:', newTheme);
-      theme.value = newTheme;
+    const updateShowLabels = (newShowLabels) => {
+      console.log('Parent received new showLabels:', newShowLabels);
+      showLabels.value = newShowLabels;
+      updateChartSeries(inputRows, title, height, width, palette, showLabels.value, showLegend.value);
     };
 
-    loadChart();
+    /**
+     * @description Updates the legend visibility
+     * @param {boolean} newShowLegend - New show legend value
+     * @returns {void}
+     */
+    const updateShowLegend = (newShowLegend) => {
+      console.log('Parent received new showLegend:', newShowLegend);
+      showLegend.value = newShowLegend;
+      updateChartSeries(inputRows, title, height, width, palette, showLabels.value, showLegend.value);
+    };
+
+    // Initialize chart with default theme and current palette
+    const initialOptions = {
+      ...defaultChartOptions,
+      theme: {
+        mode: 'light',
+        palette: palette.value
+      },
+      legend: {
+        show: showLegend.value,
+        position: 'bottom',
+        fontSize: '14px',
+        fontFamily: 'Roboto, sans-serif'
+      },
+      dataLabels: {
+        enabled: showLabels.value
+      }
+    };
+    loadChart(initialOptions);
 
     // buttons
     /**
@@ -334,6 +388,7 @@ export default {
       const dataRows = inputRows.value.map(row => {
         return [
           row.name,
+          row.comment,
           row.startTime,
           row.endTime
         ].join(',');
@@ -403,13 +458,16 @@ export default {
      * @description Generates the timeline chart with current data and settings
      * @returns {void}
      */
-    const generateChart = () => updateChartSeries(inputRows, title, height, width, theme, palette);
+    const generateChart = () => updateChartSeries(inputRows, title, height, width, palette, showLabels, showLegend);
     
     /**
      * @description Toggles visibility of additional chart settings
      * @returns {void}
      */
-    const toggleNewRow = () => showNewRow.value = !showNewRow.value;
+    const toggleNewRow = () => {
+      showNewRow.value = !showNewRow.value;
+      console.log('Toggled settings visibility:', showNewRow.value);
+    };
 
     /**
      * @description Lifecycle hook that runs when component is mounted
@@ -443,10 +501,13 @@ export default {
 
     return {
       inputRows, title, height, width,
-      palette, theme, updatePalette, updateTheme,
+      palette, updatePalette,
+      showLabels, updateShowLabels,
+      showLegend, updateShowLegend,
       addRow, removeRows, clearAll, uploadData, downloadData,
       rules, allFieldsFilled,
-      showNewRow, toggleNewRow, generateChart,
+      showNewRow, toggleNewRow,
+      generateChart
     }
   },
 }
