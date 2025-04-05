@@ -256,6 +256,10 @@ export default {
      */
     const showLegend = ref(false);
 
+    // Force initial values to be false
+    showLabels.value = false;
+    showLegend.value = false;
+
     /**
      * @description Updates the chart palette
      * @param {string} newPalette - New palette value
@@ -264,7 +268,7 @@ export default {
     const updatePalette = (newPalette) => {
       console.log('Parent received new palette:', newPalette);
       palette.value = newPalette;
-      updateChartSeries(inputRows, title, height, width, palette, showLabels);
+      updateChartSeries(inputRows, title, height, width, palette);
     };
 
     /**
@@ -275,7 +279,7 @@ export default {
     const updateShowLabels = (newShowLabels) => {
       console.log('Parent received new showLabels:', newShowLabels);
       showLabels.value = newShowLabels;
-      updateChartSeries(inputRows, title, height, width, palette, showLabels.value, showLegend.value);
+      updateChartSeries(inputRows, title, height, width, palette);
     };
 
     /**
@@ -286,7 +290,7 @@ export default {
     const updateShowLegend = (newShowLegend) => {
       console.log('Parent received new showLegend:', newShowLegend);
       showLegend.value = newShowLegend;
-      updateChartSeries(inputRows, title, height, width, palette, showLabels.value, showLegend.value);
+      updateChartSeries(inputRows, title, height, width, palette);
     };
 
     // Initialize chart with default theme and current palette
@@ -297,13 +301,15 @@ export default {
         palette: palette.value
       },
       legend: {
-        show: showLegend.value,
+        //show: showLegend.value,
+        show: false,
         position: 'bottom',
         fontSize: '14px',
         fontFamily: 'Roboto, sans-serif'
       },
       dataLabels: {
-        enabled: showLabels.value
+        //enabled: showLabels.value
+        enabled: false
       }
     };
     loadChart(initialOptions);
@@ -388,7 +394,7 @@ export default {
       const dataRows = inputRows.value.map(row => {
         return [
           row.name,
-          row.comment,
+          //row.comment,
           row.startTime,
           row.endTime
         ].join(',');

@@ -45,12 +45,15 @@ export const defaultChartOptions = {
             horizontal: true,
             barHeight: '30%',
             dataLabels: {
-                position: 'bottom'
+                hideOverflowingLabels: true,
+                position: 'bottom',
+                enabled: false
             }
         }
     },
     dataLabels: {
         enabled: false,
+        hideOverflowingLabels: true,
         style: {
             colors: ['#333'],
             fontSize: '12px',
@@ -164,8 +167,20 @@ export const updateChartSeries = (inputRows, title, height, width, palette, show
             height: height.value,
             width: width.value
         },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    //enabled: showLabels,
+                    enabled: false,
+                    hideOverflowingLabels: true,
+                    position: 'bottom'
+                }
+            }
+        },
         dataLabels: {
-            enabled: showLabels
+            //enabled: showLabels,
+            enabled: false,
+            hideOverflowingLabels: true
         },
         legend: {
             show: showLegend

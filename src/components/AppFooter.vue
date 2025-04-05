@@ -1,6 +1,7 @@
 <template>
   <v-footer
     app
+    absolute
     class="d-flex align-center justify-center py-3 footer"
   >
     <div
@@ -56,11 +57,12 @@
 <style scoped>
 .footer {
   background-color: var(--v-theme-background) !important;
-  margin-top: -50px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
 }
 
 .footer-text{
-  bottom: 0;
   width: 100%;
   padding: 8px;
   text-align: center;
