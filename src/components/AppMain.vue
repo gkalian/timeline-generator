@@ -43,8 +43,8 @@ import { ref, onMounted, watch } from 'vue'
 import { saveInputRows, saveChartSettings, clearInputRows, clearChartSettings, loadChartSettings, loadInputRows } from '../helper/utils.js';
 import { updateChartSeries } from '../helper/chart.js';
 import InputFieldsRow from './InputFieldsRow.vue';
-import ChartHeader from './ChartHeader.vue';
-import ChartContainer from './ChartContainer.vue';
+import ChartHeader from './chart/ChartHeader.vue';
+import ChartContainer from './chart/ChartContainer.vue';
 
 export default {
   components: {

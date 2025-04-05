@@ -7,7 +7,7 @@
     </v-row>
 
     <v-row v-show="showNewRow" class="chart-settings">
-      <AppChartSettings
+      <ChartSettings
         :initial-palette="palette"
         :initial-show-labels="showLabels"
         :initial-show-legend="showLegend"
@@ -41,14 +41,14 @@
 
 <script>
 import { defineComponent, ref, computed } from 'vue'
-import { loadChart, updateChartSeries, defaultChartOptions } from '../helper/chart.js'
-import AppChartSettings from './AppChartSettings.vue'
+import { loadChart, updateChartSeries, defaultChartOptions } from '../../helper/chart.js'
+import ChartSettings from './ChartSettings.vue'
 
 export default defineComponent({
   name: 'ChartContainer',
 
   components: {
-    AppChartSettings
+    ChartSettings
   },
 
   props: {

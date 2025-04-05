@@ -8,12 +8,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppChartSettings: typeof import('./src/components/AppChartSettings.vue')['default']
-    AppDatePicker: typeof import('./src/components/AppDatePicker.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppMain: typeof import('./src/components/AppMain.vue')['default']
-    ChartContainer: typeof import('./src/components/ChartContainer.vue')['default']
-    ChartHeader: typeof import('./src/components/ChartHeader.vue')['default']
+    ChartContainer: typeof import('./src/components/chart/ChartContainer.vue')['default']
+    ChartHeader: typeof import('./src/components/chart/ChartHeader.vue')['default']
+    ChartSettings: typeof import('./src/components/chart/ChartSettings.vue')['default']
+    DatePicker: typeof import('./src/components/DatePicker.vue')['default']
     InputFieldsRow: typeof import('./src/components/InputFieldsRow.vue')['default']
   }
 }

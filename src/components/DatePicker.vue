@@ -25,7 +25,7 @@
 
 <script>
 /**
- * @file AppDatePicker.vue
+ * @file DatePicker.vue
  * @description Custom date picker component that allows selecting month and year
  */
 import { ref, watch } from 'vue';

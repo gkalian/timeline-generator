@@ -94,7 +94,7 @@
 
 <script>
 import { defineComponent, ref, watch } from 'vue'
-import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, clearChartSettings } from '../helper/utils.js'
+import { saveInputRows, loadInputRows, saveChartSettings, clearInputRows, handleFileLoad, clearChartSettings } from '../../helper/utils.js'
 
 export default defineComponent({
   name: 'ChartHeader',

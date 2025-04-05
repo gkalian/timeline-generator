@@ -22,7 +22,7 @@
     </v-col>
 
     <v-col cols="12" sm="6" md="2">
-      <AppDatePicker
+      <DatePicker
         v-model="row.startTime"
         :label="'Start time'"
         :rules="[rules.dateFormatRule]"
@@ -31,7 +31,7 @@
     </v-col>
 
     <v-col cols="12" sm="6" md="2">
-      <AppDatePicker
+      <DatePicker
         v-model="row.endTime"
         :label="'End time'"
         :rules="[rules.dateFormatRule]"
@@ -43,13 +43,13 @@
 
 <script>
 import { defineComponent } from 'vue'
-import AppDatePicker from './AppDatePicker.vue'
+import DatePicker from './DatePicker.vue'
 
 export default defineComponent({
   name: 'InputFieldsRow',
   
   components: {
-    AppDatePicker
+    DatePicker
   },
 
   props: {
