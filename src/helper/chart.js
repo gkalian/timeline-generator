@@ -22,7 +22,7 @@ export const defaultChartOptions = {
         style: {
         fontSize: '20px',
         fontWeight: 'bold',
-        fontFamily: 'Roboto, sans-serif',
+        fontFamily: 'Manrope, sans-serif',
         color: '#263238'
         },
     },
@@ -178,7 +178,7 @@ export const updateChartSeries = (inputRows, title, height, width, palette, show
                 dataLabels: {
                     enabled: showLabels,
                     hideOverflowingLabels: true,
-                    position: 'left'
+                    position: 'top'
                 }
             }
         },
@@ -192,12 +192,10 @@ export const updateChartSeries = (inputRows, title, height, width, palette, show
             style: {
                 colors: ['#000000'],
                 fontSize: '12px',
-                fontFamily: 'Roboto, sans-serif',
+                fontFamily: 'Manrope, sans-serif',
                 fontWeight: 400
             },
-            offsetX: 0,
-            textAnchor: 'start',
-            position: 'left'
+            offsetX: -30
         }
     }, false, true); // false = don't redraw yet, true = update colors
 
