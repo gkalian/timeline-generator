@@ -1,5 +1,11 @@
 ## Changelog
 
+### v1.7.0
+  - styling and UI changes
+  - code refactor: split main file into chart components
+  - **feature**: add new row button for palettes and labels
+  - update dependencies
+
 ### v1.6.2
   - styling
   - footer changes

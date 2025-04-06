@@ -14,8 +14,8 @@ A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vu
 - ~~Add more settings for chart component~~
 - (Probably) Replace later the VueDatePicker with default [Date Input](https://vuetifyjs.com/en/components/date-inputs/) component.
 - (Probably) Add more functions for chart styling
-- Add new field for text (to put title or any comment)
-- Add colors for the text
+- ~~Add new field for text (to put title or any comment)~~
+- ~~Add colors for the text~~
 - Add legend on the chart (if possible)
 - Add copyright url in the chart picture
 
