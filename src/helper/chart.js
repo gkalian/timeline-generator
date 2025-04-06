@@ -83,7 +83,7 @@ export const defaultChartOptions = {
         }
     },
     theme: {
-        palette: 'palette3'
+        palette: 'palette1'
     },
     legend: {
         show: false,

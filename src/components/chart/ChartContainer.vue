@@ -72,7 +72,7 @@ export default defineComponent({
 
   setup(props) {
     const showNewRow = ref(false)
-    const palette = ref('palette3')
+    const palette = ref('palette1')
     const showLabels = ref(false)
     const showLegend = ref(false)
 

@@ -42,11 +42,11 @@ const props = defineProps({
     /**
      * @description Initial palette value passed from parent
      * @type {string}
-     * @default 'palette3'
+     * @default 'palette1'
      */
     initialPalette: {
         type: String,
-        default: 'palette3',
+        default: 'palette1',
     },
     /**
      * @description Initial show labels value passed from parent
