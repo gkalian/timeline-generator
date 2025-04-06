@@ -1,6 +1,6 @@
 <template>
-  <v-row class="optional-elements" wrap>
-    <v-col cols="12" md="7" class="d-flex flex-wrap align-center justify-start">
+  <v-row class="chart-container-settings mt-0" wrap>
+    <v-col cols="12" md="7" class="d-flex align-center">
       <v-text-field class="mr-3 mb-3 title-field"
         v-model="title"
         label="Title"
@@ -41,7 +41,7 @@
       </v-text-field>
     </v-col>
 
-    <v-col cols="12" md="5" class="d-flex flex-wrap align-center justify-start justify-md-end">
+    <v-col cols="12" md="5" class="d-flex pl-10">
       <v-btn class="mr-3 mb-3"
         v-on:click="addRow"
         title="Add row"
@@ -88,6 +88,15 @@
       >
         <v-icon>mdi-download</v-icon>
       </v-btn>
+
+      <v-btn class="mr-3 mb-3"
+        v-on:click="$emit('toggle-new-row')"
+        title="Settings"
+        dark
+        bottom
+      >
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
     </v-col>
   </v-row>
 </template>
@@ -115,10 +124,14 @@ export default defineComponent({
     width: {
       type: String,
       default: '900'
+    },
+    inputRows: {
+      type: Array,
+      required: true
     }
   },
 
-  emits: ['update:modelValue', 'update:title', 'update:height', 'update:width', 'add-row', 'remove-rows', 'clear-all'],
+  emits: ['update:modelValue', 'update:title', 'update:height', 'update:width', 'add-row', 'remove-rows', 'clear-all', 'toggle-new-row'],
 
   setup(props, { emit }) {
     const title = ref(props.title || 'Timeline')
@@ -180,7 +193,7 @@ export default defineComponent({
         if (file) {
           const reader = new FileReader()
           reader.onload = (event) => {
-            const result = handleFileLoad(event)
+            const result = handleFileLoad(event, props.inputRows)
 
             if (result) {
               title.value = result.chartTitle || 'Timeline'
@@ -190,13 +203,9 @@ export default defineComponent({
               emit('update:height', height.value)
               emit('update:width', width.value)
               saveChartSettings(title.value, height.value, width.value)
-              
+              saveInputRows(props.inputRows, title.value, height.value, width.value)
               // Update input rows in parent component
-              const updatedRows = result.rows.map(row => ({
-                ...row,
-                comment: ''
-              }))
-              emit('update:modelValue', updatedRows)
+              emit('update:modelValue', result.rows)
             }
           }
           reader.readAsText(file)
@@ -206,25 +215,41 @@ export default defineComponent({
     }
 
     const downloadData = () => {
-      const metadataRow = [title.value, height.value, width.value].join(',')
-      const dataRows = props.inputRows.map(row => {
-        return [
-          row.name,
-          row.startTime,
-          row.endTime
-        ].join(',')
-      }).join('\n')
+      // Ensure we have data to download
+      if (!props.inputRows || props.inputRows.length === 0) {
+        console.error('No data to download')
+        return
+      }
 
+      // Create metadata row with chart settings
+      const metadataRow = [title.value, height.value, width.value].join(',')
+      
+      // Create data rows, filtering out empty rows
+      const dataRows = props.inputRows
+        .filter(row => row.name || row.comment|| row.startTime || row.endTime )
+        .map(row => {
+          return [
+            row.name || '',
+            row.comment || '',
+            row.startTime || '',
+            row.endTime || ''
+          ].join(',')
+        }).join('\n')
+
+      // Combine metadata and data rows
       const csvContent = `${metadataRow}\n${dataRows}`
+      
+      // Create and trigger download
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
       const link = document.createElement('a')
       const url = URL.createObjectURL(blob)
       link.setAttribute('href', url)
-      link.setAttribute('download', 'timeline_data.csv')
+      link.setAttribute('download', `${title.value || 'timeline'}.csv`);
       link.style.visibility = 'hidden'
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+      URL.revokeObjectURL(url)
     }
 
     return {

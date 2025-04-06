@@ -1,6 +1,6 @@
 <template>
-    <v-row>
-        <v-col cols="12" sm="6">
+    <v-row class="mt-2">
+        <v-col cols="12" md="6">
             <v-select
                 v-model="localPalette"
                 label="Color Palette"
@@ -8,9 +8,10 @@
                 variant="outlined"
                 hide-details
                 density="compact"
+
             ></v-select>
         </v-col>
-        <v-col cols="12" sm="3" class="d-flex align-center">
+        <v-col cols="12" md="3">
             <v-switch
                 v-model="localShowLabels"
                 label="Show Labels"
@@ -19,15 +20,7 @@
                 color="primary"
             ></v-switch>
         </v-col>
-        <v-col cols="12" sm="3" class="d-flex align-center">
-            <v-switch
-                v-model="localShowLegend"
-                label="Show Legend"
-                hide-details
-                density="compact"
-                color="primary"
-            ></v-switch>
-        </v-col>
+
     </v-row>
 </template>
 
@@ -57,18 +50,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    /**
-     * @description Initial show legend value passed from parent
-     * @type {boolean}
-     * @default false
-     */
-    initialShowLegend: {
-        type: Boolean,
-        default: false,
-    },
+
 });
 
-const emit = defineEmits(['update:palette', 'update:showLabels', 'update:showLegend']);
+const emit = defineEmits(['update:palette', 'update:showLabels']);
 
 /**
  * @description Local reactive reference to the palette value
@@ -81,12 +66,6 @@ const localPalette = ref(props.initialPalette);
  * @type {import('vue').Ref<boolean>}
  */
 const localShowLabels = ref(props.initialShowLabels);
-
-/**
- * @description Local reactive reference to the show legend value
- * @type {import('vue').Ref<boolean>}
- */
-const localShowLegend = ref(props.initialShowLegend);
 
 /**
  * @description Available color palettes for the chart
@@ -121,11 +100,4 @@ watch(localShowLabels, () => {
     emit('update:showLabels', localShowLabels.value);
 });
 
-/**
- * @description Watch for changes in show legend to emit update event to parent
- */
-watch(localShowLegend, () => {
-    console.log('Show legend:', localShowLegend.value);
-    emit('update:showLegend', localShowLegend.value);
-});
 </script>

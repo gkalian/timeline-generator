@@ -74,8 +74,12 @@ export const defaultChartOptions = {
         categories: []
     },
     tooltip: {
-        enabled: false,
-        },
+        enabled: true,
+        custom: function({ series, seriesIndex, dataPointIndex, w }) {
+            const comment = w.config.series[seriesIndex].data[dataPointIndex].comment;
+            return comment ? `<div class="apexcharts-tooltip-title">${comment}</div>` : '';
+        }
+    },
     grid: {
         row: {
         colors: ["#f3f3f3", "transparent"],
@@ -85,12 +89,7 @@ export const defaultChartOptions = {
     theme: {
         palette: 'palette1'
     },
-    legend: {
-        show: false,
-        position: 'bottom',
-        fontSize: '14px',
-        fontFamily: 'Roboto, sans-serif'
-    },
+
     series: [
         {
         name: "",
@@ -121,14 +120,14 @@ export const loadChart = (options = defaultChartOptions) => {
 
 /**
  * @description Updates the chart with new data and settings
- * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Timeline data rows
+ * @param {import('vue').Ref<Array<{name: string, comment: string, startTime: string, endTime: string}>>} inputRows - Timeline data rows
  * @param {import('vue').Ref<string>} title - Chart title
  * @param {import('vue').Ref<string>} height - Chart height in pixels
  * @param {import('vue').Ref<string>} width - Chart width in pixels
  * @param {import('vue').Ref<string>} palette - Chart color palette
  * @returns {void}
  */
-export const updateChartSeries = (inputRows, title, height, width, palette, showLabels, showLegend) => {
+export const updateChartSeries = (inputRows, title, height, width, palette, showLabels) => {
     if (!chart.value) return;
 
     const inputRowsValue = inputRows?.value ?? inputRows;
@@ -157,7 +156,8 @@ export const updateChartSeries = (inputRows, title, height, width, palette, show
 
         return {
             x: row.name,
-            y: [startTimeDate.getTime(), endTimeDate.getTime()]
+            y: [startTimeDate.getTime(), endTimeDate.getTime()],
+            comment: row.comment || ''
         };
     });
 
@@ -178,16 +178,26 @@ export const updateChartSeries = (inputRows, title, height, width, palette, show
                 dataLabels: {
                     enabled: showLabels,
                     hideOverflowingLabels: true,
-                    position: 'bottom'
+                    position: 'left'
                 }
             }
         },
         dataLabels: {
             enabled: showLabels,
-            hideOverflowingLabels: true
-        },
-        legend: {
-            show: showLegend
+            hideOverflowingLabels: true,
+            formatter: function(val, opts) {
+                const comment = opts.w.config.series[0].data[opts.dataPointIndex].comment;
+                return comment || '';
+            },
+            style: {
+                colors: ['#000000'],
+                fontSize: '12px',
+                fontFamily: 'Roboto, sans-serif',
+                fontWeight: 400
+            },
+            offsetX: 0,
+            textAnchor: 'start',
+            position: 'left'
         }
     }, false, true); // false = don't redraw yet, true = update colors
 

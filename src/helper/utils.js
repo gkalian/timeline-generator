@@ -5,7 +5,7 @@
 
 /**
  * @description Saves input rows and chart settings to localStorage
- * @param {Array<{name: string, startTime: string, endTime: string}>} inputRows - Array of timeline data rows
+ * @param {Array<{name: string, comment: string, startTime: string, endTime: string}>} inputRows - Array of timeline data rows
  * @param {string} title - Chart title
  * @param {string} height - Chart height in pixels
  * @param {string} width - Chart width in pixels
@@ -34,7 +34,7 @@ export function saveChartSettings(title, height, width) {
 
 /**
  * @description Loads input rows from localStorage into a reactive reference
- * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
+ * @param {import('vue').Ref<Array<{name: string, comment: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
  * @returns {void}
  */
 export function loadInputRows(inputRows) {
@@ -93,7 +93,7 @@ export function clearAllData() {
 /**
  * @description Handles file selection and initiates file reading
  * @param {HTMLInputElement} input - File input element
- * @param {import('vue').Ref<Array<{name: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
+ * @param {import('vue').Ref<Array<{name: string, comment: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
  * @returns {void}
  */
 export function handleFileSelect(input, inputRows) {
@@ -108,9 +108,10 @@ export function handleFileSelect(input, inputRows) {
 /**
  * @description Processes loaded CSV file data and extracts timeline information
  * @param {Event} event - File reader load event
+ * @param {import('vue').Ref<Array<{name: string, comment: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
  * @returns {Object|null} Object containing chart metadata and row data, or null if parsing failed
  */
-export function handleFileLoad(event) {
+export function handleFileLoad(event, inputRows) {
   const csvData = event.target.result;
   const rows = csvData.trim().split('\n');
 
@@ -127,11 +128,12 @@ export function handleFileLoad(event) {
 
   // Process remaining rows as data rows
   const dataRows = rows.slice(1).map(row => {
-    const [name, start, end] = row.replace(/\r/g, '').split(',');
+    const [name, comment, start, end] = row.replace(/\r/g, '').split(',');
     const startTime = toMMYYYY(start);
     const endTime = toMMYYYY(end);
     return {
       name,
+      comment,
       startTime,
       endTime
     };

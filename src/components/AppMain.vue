@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-responsive class="align-center mx-auto"
+    <v-responsive class="main-container align-center mx-auto"
       min-width="320"
       max-width="2048"
     >
@@ -15,20 +15,25 @@
 
       <ChartHeader
         v-model="inputRows"
+        :input-rows="inputRows"
         v-model:title="title"
         v-model:height="height"
         v-model:width="width"
         @add-row="addRow"
         @remove-rows="removeRows"
         @clear-all="clearAll"
+        @toggle-new-row="toggleNewRow"
       />
 
-      <ChartContainer
+      <v-row class="chart-container">
+        <ChartContainer
         :input-rows="inputRows"
         :title="title"
         :height="height"
         :width="width"
+        :show-new-row="showNewRow"
       />
+      </v-row>
 
     </v-responsive>
   </v-container>
@@ -59,9 +64,8 @@ export default {
     const height = ref('400');
     const width = ref('900');
     const palette = ref('palette1');
-    //const showLabels = ref(true);
-    //const showLegend = ref(true);
-    const inputRows = ref([{ name: '', startTime: '', endTime: '', comment: '' }]);
+    const showNewRow = ref(false);
+    const inputRows = ref([{ name: '', comment: '' , startTime: '', endTime: '' }]);
 
     // Load saved settings and data if available
     if (chartSettings) {
@@ -76,7 +80,7 @@ export default {
     console.log('After loading:', inputRows.value);
 
     const addRow = () => {
-      inputRows.value.push({ name: '', startTime: '', endTime: '', comment: '' });
+      inputRows.value.push({ name: '', comment: '', startTime: '', endTime: '' });
     }
 
     const removeRows = () => {
@@ -87,12 +91,16 @@ export default {
 
     const clearAll = () => {
       inputRows.value.splice(1);
-      inputRows.value[0] = { name: '', startTime: '', endTime: '', comment: '' };
+      inputRows.value[0] = { name: '', comment: '', startTime: '', endTime: '' };
       title.value = 'Timeline';
       height.value = '400';
       width.value = '900';
       clearInputRows();
       clearChartSettings();
+    }
+
+    const toggleNewRow = () => {
+      showNewRow.value = !showNewRow.value
     }
 
     // Load saved data on mount
@@ -137,11 +145,11 @@ export default {
       height,
       width,
       palette,
-      //showLabels,
-      //showLegend,
+      showNewRow,
       addRow,
       removeRows,
-      clearAll
+      clearAll,
+      toggleNewRow,
     }
   },
 }
@@ -156,6 +164,32 @@ export default {
 .dimension-field {
   max-width: 250px;
   min-width: 150px;
+}
+
+.chart-container {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 5;
+  justify-content: center;
+}
+
+.chart-element {
+  min-width: 100%;
+  height: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
 }
 
 </style>

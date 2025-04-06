@@ -17,7 +17,6 @@
         label="Comment"
         variant="outlined"
         clearable
-        disabled
       ></v-text-field>
     </v-col>
 
