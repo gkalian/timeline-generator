@@ -5,18 +5,18 @@
  */
 
 // Core Vue
-import { createApp } from 'vue'
+import { createApp } from "vue";
 
 // Main App Component
-import App from './App.vue'
+import App from "./App.vue";
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from "@/plugins";
 import VueApexCharts from "vue3-apexcharts";
-import VueDatePicker from '@vuepic/vue-datepicker';
+import VueDatePicker from "@vuepic/vue-datepicker";
 
 // Global styles
-import './styles/main.css';
+import "./styles/main.css";
 
 /**
  * Initialize and bootstrap the Vue application
@@ -26,22 +26,22 @@ import './styles/main.css';
  */
 const initializeApp = () => {
   try {
-    const app = createApp(App)
+    const app = createApp(App);
 
     // Register plugins
     app.use(VueApexCharts);
-    app.component('VueDatePicker', VueDatePicker);
-    registerPlugins(app)
+    app.component("VueDatePicker", VueDatePicker);
+    registerPlugins(app);
 
     // Mount application
-    app.mount('#main')
+    app.mount("#main");
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Application successfully mounted in development mode')
+    if (import.meta.env.MODE === "development") {
+      console.log("Application successfully mounted in development mode");
     }
   } catch (error) {
-    console.error('Failed to initialize application:', error)
+    console.error("Failed to initialize application:", error);
   }
-}
+};
 
-initializeApp()
+initializeApp();

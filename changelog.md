@@ -1,5 +1,11 @@
 ## Changelog
 
+### v1.8.0
+  - remove unplugin-fonts (not supported by vite 7)
+  - re-import Manrope font
+  - remove tooltip and update labels styling
+  - installed eslint and prettier
+
 ### v1.7.0
   - styling and UI changes
   - code refactor: split main file into chart components
@@ -9,7 +15,7 @@
 ### v1.6.2
   - styling
   - footer changes
-  - update dependencies
+  - update dependencies`
 
 ### v1.6.1
   - correct clean button behavior

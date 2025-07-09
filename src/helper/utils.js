@@ -13,7 +13,7 @@
  */
 export function saveInputRows(inputRows, title, height, width) {
   const inputRowsJSON = JSON.stringify(inputRows);
-  localStorage.setItem('inputRows', inputRowsJSON);
+  localStorage.setItem("inputRows", inputRowsJSON);
 
   // Save the chart settings, if provided
   saveChartSettings(title, height, width);
@@ -27,9 +27,9 @@ export function saveInputRows(inputRows, title, height, width) {
  * @returns {void}
  */
 export function saveChartSettings(title, height, width) {
-  if (title !== undefined) localStorage.setItem('chartTitle', title);
-  if (height !== undefined) localStorage.setItem('chartHeight', height);
-  if (width !== undefined) localStorage.setItem('chartWidth', width);
+  if (title !== undefined) localStorage.setItem("chartTitle", title);
+  if (height !== undefined) localStorage.setItem("chartHeight", height);
+  if (width !== undefined) localStorage.setItem("chartWidth", width);
 }
 
 /**
@@ -38,12 +38,12 @@ export function saveChartSettings(title, height, width) {
  * @returns {void}
  */
 export function loadInputRows(inputRows) {
-  const inputRowsJSON = localStorage.getItem('inputRows');
+  const inputRowsJSON = localStorage.getItem("inputRows");
   if (inputRowsJSON) {
     const loadedInputRows = JSON.parse(inputRowsJSON);
     inputRows.value.splice(0, inputRows.value.length, ...loadedInputRows);
   } else {
-    console.log('Input rows local storage is empty or JSON is undefined');
+    console.log("Input rows local storage is empty or JSON is undefined");
   }
 }
 
@@ -52,14 +52,14 @@ export function loadInputRows(inputRows) {
  * @returns {Object} Object containing chart title, height, and width with default values if not found
  */
 export function loadChartSettings() {
-  const savedTitle = localStorage.getItem('chartTitle');
-  const savedHeight = localStorage.getItem('chartHeight');
-  const savedWidth = localStorage.getItem('chartWidth');
+  const savedTitle = localStorage.getItem("chartTitle");
+  const savedHeight = localStorage.getItem("chartHeight");
+  const savedWidth = localStorage.getItem("chartWidth");
 
   return {
-    title: savedTitle || 'Timeline',
-    height: savedHeight || '400',
-    width: savedWidth || '900'
+    title: savedTitle || "Timeline",
+    height: savedHeight || "400",
+    width: savedWidth || "900",
   };
 }
 
@@ -68,7 +68,7 @@ export function loadChartSettings() {
  * @returns {void}
  */
 export function clearInputRows() {
-  localStorage.removeItem('inputRows');
+  localStorage.removeItem("inputRows");
 }
 
 /**
@@ -76,9 +76,9 @@ export function clearInputRows() {
  * @returns {void}
  */
 export function clearChartSettings() {
-  localStorage.removeItem('chartTitle');
-  localStorage.removeItem('chartHeight');
-  localStorage.removeItem('chartWidth');
+  localStorage.removeItem("chartTitle");
+  localStorage.removeItem("chartHeight");
+  localStorage.removeItem("chartWidth");
 }
 
 /**
@@ -99,9 +99,9 @@ export function clearAllData() {
 export function handleFileSelect(input, inputRows) {
   const file = input.files[0];
   if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => handleFileLoad(event, inputRows);
-      reader.readAsText(file);
+    const reader = new FileReader();
+    reader.onload = (event) => handleFileLoad(event, inputRows);
+    reader.readAsText(file);
   }
 }
 
@@ -111,31 +111,31 @@ export function handleFileSelect(input, inputRows) {
  * @param {import('vue').Ref<Array<{name: string, comment: string, startTime: string, endTime: string}>>} inputRows - Reactive reference to update with loaded data
  * @returns {Object|null} Object containing chart metadata and row data, or null if parsing failed
  */
-export function handleFileLoad(event, inputRows) {
+export function handleFileLoad(event) {
   const csvData = event.target.result;
-  const rows = csvData.trim().split('\n');
+  const rows = csvData.trim().split("\n");
 
   // Check if there is at least one row
   if (rows.length === 0) return null;
 
   // Parse chart metadata from the first row
-  const chartMetadata = rows[0].replace(/\r/g, '').split(',');
+  const chartMetadata = rows[0].replace(/\r/g, "").split(",");
 
   // Extract metadata (assuming the first row always contains metadata)
-  const chartTitle = chartMetadata[0] || 'Timeline';
-  const chartHeight = chartMetadata[1] || '400';
-  const chartWidth = chartMetadata[2] || '900';
+  const chartTitle = chartMetadata[0] || "Timeline";
+  const chartHeight = chartMetadata[1] || "400";
+  const chartWidth = chartMetadata[2] || "900";
 
   // Process remaining rows as data rows
-  const dataRows = rows.slice(1).map(row => {
-    const [name, comment, start, end] = row.replace(/\r/g, '').split(',');
+  const dataRows = rows.slice(1).map((row) => {
+    const [name, comment, start, end] = row.replace(/\r/g, "").split(",");
     const startTime = toMMYYYY(start);
     const endTime = toMMYYYY(end);
     return {
       name,
       comment,
       startTime,
-      endTime
+      endTime,
     };
   });
 
@@ -144,7 +144,7 @@ export function handleFileLoad(event, inputRows) {
     chartTitle,
     chartHeight,
     chartWidth,
-    rows: dataRows
+    rows: dataRows,
   };
 }
 
@@ -156,9 +156,9 @@ export function handleFileLoad(event, inputRows) {
  */
 function toMMYYYY(dateStr) {
   // Check if the string is empty or undefined
-  if (!dateStr) return '';
+  if (!dateStr) return "";
 
-  const [month, year] = dateStr.split('.');
-  const monthStr = (month.length === 1 ? '0' : '') + month;
+  const [month, year] = dateStr.split(".");
+  const monthStr = (month.length === 1 ? "0" : "") + month;
   return `${monthStr}.${year}`;
 }

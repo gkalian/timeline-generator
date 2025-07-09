@@ -1,4 +1,4 @@
-import vuetify from './vuetify'
+import vuetify from "./vuetify";
 
 /**
  * Register all application plugins
@@ -10,15 +10,15 @@ import vuetify from './vuetify'
 export function registerPlugins(app) {
   try {
     // Core plugins
-    app.use(vuetify)
+    app.use(vuetify);
 
     // Development plugins
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.MODE === "development") {
       // Add any development-only plugins here
-      console.log('Plugins registered successfully')
+      console.log("Plugins registered successfully");
     }
   } catch (error) {
-    console.error('Failed to register plugins:', error)
-    throw error // Re-throw to handle it in the main application
+    console.error("Failed to register plugins:", error);
+    throw error; // Re-throw to handle it in the main application
   }
 }

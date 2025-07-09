@@ -1,5 +1,11 @@
 <template>
-  <v-row class="main-input-fields" v-for="(row, index) in modelValue" :key="index" dense wrap>
+  <v-row
+    class="main-input-fields"
+    v-for="(row, index) in modelValue"
+    :key="index"
+    dense
+    wrap
+  >
     <v-col cols="12" sm="12" md="4">
       <v-text-field
         v-model="row.name"
@@ -41,43 +47,43 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import DatePicker from './DatePicker.vue'
+import { defineComponent } from "vue";
+import DatePicker from "./DatePicker.vue";
 
 export default defineComponent({
-  name: 'InputFieldsRow',
-  
+  name: "InputFieldsRow",
+
   components: {
-    DatePicker
+    DatePicker,
   },
 
   props: {
     modelValue: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
 
-  emits: ['update:modelValue'],
+  emits: ["update:modelValue"],
 
   setup(props, { emit }) {
-
     const rules = {
-      nameRequiredRule: value => !!value || 'Name is required',
-      dateFormatRule: value => /^(0[1-9]|1[0-2])\.\d{4}$/.test(value) || 'Correct format is MM.YYYY',
-      chartRequiredRule: value => !!value || 'Value is required',
-    }
+      nameRequiredRule: (value) => !!value || "Name is required",
+      dateFormatRule: (value) =>
+        /^(0[1-9]|1[0-2])\.\d{4}$/.test(value) || "Correct format is MM.YYYY",
+      chartRequiredRule: (value) => !!value || "Value is required",
+    };
 
     const updateRow = (index, field, value) => {
-      const updatedRows = [...props.modelValue]
-      updatedRows[index][field] = value
-      emit('update:modelValue', updatedRows)
-    }
+      const updatedRows = [...props.modelValue];
+      updatedRows[index][field] = value;
+      emit("update:modelValue", updatedRows);
+    };
 
     return {
       rules,
-      updateRow
-    }
-  }
-})
+      updateRow,
+    };
+  },
+});
 </script>
