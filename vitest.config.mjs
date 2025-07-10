@@ -9,7 +9,8 @@ export default defineConfig({
     environment: 'jsdom',
     coverage: {
       provider: 'v8', // 'istanbul'
-      reporter: ['text', 'json', 'html']
+      reporter: ['text', 'json-summary', 'html'],
+      reportsDirectory: './coverage'
     }
   },
   css: {

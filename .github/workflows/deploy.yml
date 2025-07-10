@@ -21,33 +21,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests with coverage
-        run: npm run test:coverage
-      
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage/lcov.info
-        if: github.event_name == 'push'
-
 
   deploy:
-    needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     environment:
@@ -69,8 +44,37 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
       - name: Build
         run: npm run build
+      
+      - name: Add coverage data to dist
+        run: |
+          COVERAGE=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
+          COVERAGE_INT=$(printf "%.0f" $COVERAGE)
+          
+          if [ $COVERAGE_INT -ge 80 ]; then
+            COLOR="brightgreen"
+          elif [ $COVERAGE_INT -ge 60 ]; then
+            COLOR="yellow"
+          else
+            COLOR="red"
+          fi
+          
+          mkdir -p dist/coverage
+          
+          cat > dist/coverage/coverage.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "coverage",
+            "message": "${COVERAGE_INT}%",
+            "color": "$COLOR"
+          }
+          EOF
+          
+          echo "Coverage badge data added to dist/coverage/"
       
       - name: Setup Pages
         uses: actions/configure-pages@v5
