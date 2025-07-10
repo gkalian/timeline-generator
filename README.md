@@ -1,5 +1,8 @@
 # Timeline generator
 
+
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D) ![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![ApexCharts](https://img.shields.io/badge/ApexCharts-FF6C37?style=for-the-badge&logo=apexcharts&logoColor=white) ![Coverage](https://img.shields.io/codecov/c/github/gkalian/timeline-generator?style=for-the-badge) ![GitHub license](https://img.shields.io/github/license/gkalian/timeline-generator?style=for-the-badge)
+
 A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vue-datepicker** libraries. Supports multiple rows, upload and download data in .csv format, changing the chart title and size.
 
 [Live generator](https://gkalian.github.io/timeline-generator/)
@@ -18,13 +21,6 @@ A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vu
 - ~~Add colors for the text~~
 - Add legend on the chart (if possible)
 - Add copyright url in the chart picture
-
-### Build 
-
-![ME](https://img.shields.io/badge/by-gkalian-purple?style=for-the-badge&&logoColor=white)
-![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
-![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF)
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 
 ## Usage
 
