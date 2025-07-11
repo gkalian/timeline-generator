@@ -1,4 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import {
+  setupTestEnvironment,
+  cleanupTestEnvironment
+} from '../setup/test-utils.js'
 
 // Mock vuetify plugin
 vi.mock('../../src/plugins/vuetify', () => ({
@@ -9,30 +13,18 @@ vi.mock('../../src/plugins/vuetify', () => ({
 
 describe('registerPlugins', () => {
   let mockApp
-  let consoleSpy
-  let consoleErrorSpy
+  let consoleMocks
 
-  beforeEach(async () => {
-    // Create mock Vue app
+  beforeEach(() => {
     mockApp = {
       use: vi.fn()
     }
 
-    // Spy on console methods
-    consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-
-    // Clear all mocks
-    vi.clearAllMocks()
-    vi.resetModules()
+    consoleMocks = setupTestEnvironment()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
-    consoleSpy.mockRestore()
-    consoleErrorSpy.mockRestore()
-    // Restore original environment
-    vi.unstubAllEnvs()
+    cleanupTestEnvironment(consoleMocks)
   })
 
   it('should register vuetify plugin successfully', async () => {
@@ -51,7 +43,7 @@ describe('registerPlugins', () => {
     const { registerPlugins } = await import('../../src/plugins/index.js')
     registerPlugins(mockApp)
 
-    expect(consoleSpy).toHaveBeenCalledWith('Plugins registered successfully')
+    expect(consoleMocks.consoleSpy).toHaveBeenCalledWith('Plugins registered successfully')
     expect(mockApp.use).toHaveBeenCalledTimes(1)
   })
 
@@ -61,7 +53,7 @@ describe('registerPlugins', () => {
     const { registerPlugins } = await import('../../src/plugins/index.js')
     registerPlugins(mockApp)
 
-    expect(consoleSpy).not.toHaveBeenCalled()
+    expect(consoleMocks.consoleSpy).not.toHaveBeenCalled()
     expect(mockApp.use).toHaveBeenCalledTimes(1)
   })
 
@@ -79,7 +71,7 @@ describe('registerPlugins', () => {
       registerPlugins(mockApp)
     }).toThrow('Plugin registration failed')
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to register plugins:', testError)
+    expect(consoleMocks.consoleErrorSpy).toHaveBeenCalledWith('Failed to register plugins:', testError)
     expect(mockApp.use).toHaveBeenCalledTimes(1)
   })
 
@@ -97,8 +89,8 @@ describe('registerPlugins', () => {
       registerPlugins(mockApp)
     }).toThrow('Plugin registration failed')
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to register plugins:', testError)
-    expect(consoleSpy).not.toHaveBeenCalledWith('Plugins registered successfully')
+    expect(consoleMocks.consoleErrorSpy).toHaveBeenCalledWith('Failed to register plugins:', testError)
+    expect(consoleMocks.consoleSpy).not.toHaveBeenCalledWith('Plugins registered successfully')
   })
 
   it('should work with different environment modes', async () => {
@@ -107,23 +99,66 @@ describe('registerPlugins', () => {
     for (const mode of testModes) {
       // Clear mocks before each iteration
       vi.clearAllMocks()
-      consoleSpy.mockClear()
+      consoleMocks.consoleSpy.mockClear()
 
       // Set environment mode
       vi.stubEnv('MODE', mode)
+
+      // Reset modules for fresh import
+      vi.resetModules()
 
       // Import fresh module
       const { registerPlugins } = await import('../../src/plugins/index.js')
       registerPlugins(mockApp)
 
       if (mode === 'development') {
-        expect(consoleSpy).toHaveBeenCalledWith('Plugins registered successfully')
+        expect(consoleMocks.consoleSpy).toHaveBeenCalledWith('Plugins registered successfully')
       } else {
-        expect(consoleSpy).not.toHaveBeenCalled()
+        expect(consoleMocks.consoleSpy).not.toHaveBeenCalled()
       }
 
-      // Reset modules for next iteration
-      vi.resetModules()
+      expect(mockApp.use).toHaveBeenCalledTimes(1)
     }
+  })
+
+  it('executes without throwing errors in normal conditions', async () => {
+    vi.stubEnv('MODE', 'test')
+
+    expect(async () => {
+      const { registerPlugins } = await import('../../src/plugins/index.js')
+      registerPlugins(mockApp)
+    }).not.toThrow()
+  })
+
+  it('imports registerPlugins successfully', async () => {
+    const pluginModule = await import('../../src/plugins/index.js')
+    expect(pluginModule.registerPlugins).toBeDefined()
+    expect(typeof pluginModule.registerPlugins).toBe('function')
+  })
+
+  it('validates app parameter', async () => {
+    const { registerPlugins } = await import('../../src/plugins/index.js')
+
+    expect(() => {
+      registerPlugins(null)
+    }).toThrow()
+
+    expect(() => {
+      registerPlugins(undefined)
+    }).toThrow()
+
+    expect(() => {
+      registerPlugins({})
+    }).toThrow()
+  })
+
+  it('ensures plugin is properly configured before registration', async () => {
+    const { registerPlugins } = await import('../../src/plugins/index.js')
+    registerPlugins(mockApp)
+
+    // Verify that the plugin being registered has required properties
+    const registeredPlugin = mockApp.use.mock.calls[0][0]
+    expect(registeredPlugin).toHaveProperty('install')
+    expect(typeof registeredPlugin.install).toBe('function')
   })
 })

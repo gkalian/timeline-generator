@@ -1,66 +1,70 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import App from '../src/App.vue'
+import {
+  getVuetifyStubs,
+  createComponentWrapper,
+  expectComponentToExist,
+  expectStandardComponentBehavior,
+} from '../tests/setup/test-utils.js'
 
-// Mock CSS imports
-vi.mock('*.css', () => ({}))
-
-// Mock child components
-vi.mock('../src/components/AppMain.vue', () => ({
-  default: {
-    name: 'AppMain',
-    template: '<div data-testid="app-main">AppMain</div>'
-  }
-}))
-
-vi.mock('../src/components/AppFooter.vue', () => ({
-  default: {
-    name: 'AppFooter',
-    template: '<div data-testid="app-footer">AppFooter</div>'
-  }
-}))
-
+// УБИРАЕМ vi.mock - используем только stubs
 describe('App.vue', () => {
-  const createWrapper = () => {
-    return mount(App, {
+  let wrapper
+
+  const createWrapper = (options = {}) => {
+    return createComponentWrapper(App, mount, {
+      ...options,
       global: {
         stubs: {
-          'v-app': { template: '<div class="v-application"><slot /></div>' },
-          'v-main': { template: '<div class="v-main"><slot /></div>' },
-          AppMain: { template: '<div data-testid="app-main">AppMain</div>' },
-          AppFooter: { template: '<div data-testid="app-footer">AppFooter</div>' }
-        }
+          ...getVuetifyStubs(),
+          // Только stubs для дочерних компонентов
+          AppMain: {
+            name: 'AppMain',
+            template: '<div data-testid="app-main">AppMain Content</div>'
+          },
+          AppFooter: {
+            name: 'AppFooter',
+            template: '<div data-testid="app-footer">AppFooter Content</div>'
+          }
+        },
+        ...options.global
       }
     })
   }
 
-  it('renders the main app structure', () => {
-    const wrapper = createWrapper()
+  it('renders main app structure', () => {
+    wrapper = createWrapper()
 
+    expectStandardComponentBehavior(wrapper)
     expect(wrapper.find('.v-application').exists()).toBe(true)
     expect(wrapper.find('.v-main').exists()).toBe(true)
   })
 
-  it('renders AppMain component', () => {
-    const wrapper = createWrapper()
+  it('renders child components', () => {
+    wrapper = createWrapper()
 
-    expect(wrapper.find('[data-testid="app-main"]').exists()).toBe(true)
+    expectComponentToExist(wrapper, 'app-main')
+    expectComponentToExist(wrapper, 'app-footer')
   })
 
-  it('renders AppFooter component', () => {
-    const wrapper = createWrapper()
-
-    expect(wrapper.find('[data-testid="app-footer"]').exists()).toBe(true)
-  })
-
-  it('has correct component structure', () => {
-    const wrapper = createWrapper()
+  it('maintains proper component hierarchy', () => {
+    wrapper = createWrapper()
 
     const vApp = wrapper.find('.v-application')
     const vMain = wrapper.find('.v-main')
+    const appMain = wrapper.find('[data-testid="app-main"]')
+    const appFooter = wrapper.find('[data-testid="app-footer"]')
 
     expect(vApp.exists()).toBe(true)
     expect(vMain.exists()).toBe(true)
-    expect(vApp.find('.v-main').exists()).toBe(true)
+    expect(appMain.exists()).toBe(true)
+    expect(appFooter.exists()).toBe(true)
+  })
+
+  it('renders without errors', () => {
+    expect(() => {
+      wrapper = createWrapper()
+    }).not.toThrow()
   })
 })

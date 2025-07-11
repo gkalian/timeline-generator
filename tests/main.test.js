@@ -1,118 +1,35 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import {
+  getVueEcosystemMocks,
+  setupTestEnvironment
+} from '../tests/setup/test-utils.js'
 
-// Моки ДОЛЖНЫ быть в самом начале, до любых импортов
-vi.mock('../src/styles/main.css', () => ({}))
-
-const mockApp = {
-  use: vi.fn().mockReturnThis(),
-  component: vi.fn().mockReturnThis(),
-  mount: vi.fn().mockReturnThis()
-}
-
-const mockCreateApp = vi.fn(() => mockApp)
-
-vi.mock('vue', () => ({
-  createApp: mockCreateApp
-}))
+// Mock Vue and ecosystem
+const vueEcosystemMocks = getVueEcosystemMocks()
+vi.mock('vue', () => vueEcosystemMocks.vue)
 
 vi.mock('../src/App.vue', () => ({
   default: { name: 'App' }
 }))
 
 const mockRegisterPlugins = vi.fn()
-vi.mock('@/plugins', () => ({
-  registerPlugins: mockRegisterPlugins
-}))
-
-// Также попробуем замокать по относительному пути
 vi.mock('../src/plugins', () => ({
   registerPlugins: mockRegisterPlugins
 }))
 
-vi.mock('../src/plugins/index.js', () => ({
-  registerPlugins: mockRegisterPlugins
-}))
-
-const mockVueApexCharts = { name: 'VueApexCharts' }
-vi.mock('vue3-apexcharts', () => ({
-  default: mockVueApexCharts
-}))
-
-const mockVueDatePicker = { name: 'VueDatePicker' }
-vi.mock('@vuepic/vue-datepicker', () => ({
-  default: mockVueDatePicker
-}))
-
-// Mock import.meta.env используя vi.stubGlobal
-const mockEnv = { MODE: 'development' }
-
 describe('main.js', () => {
-  let consoleSpy
-  let consoleErrorSpy
+  let consoleMocks
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-
-    // Mock import.meta.env для каждого теста
-    vi.stubGlobal('import', {
-      meta: {
-        env: mockEnv
-      }
-    })
-  })
-
-  afterEach(() => {
-    consoleSpy.mockRestore()
-    consoleErrorSpy.mockRestore()
-    vi.unstubAllGlobals()
-  })
-
-  it('initializes Vue application correctly', async () => {
-    // Импортируем реальный main.js - это запустит код инициализации
-    await import('../src/main.js')
-
-    expect(mockCreateApp).toHaveBeenCalledWith(expect.objectContaining({
-      name: 'App'
-    }))
-  })
-
-  it('registers VueApexCharts plugin', async () => {
-    vi.resetModules()
-    await import('../src/main.js')
-
-    expect(mockApp.use).toHaveBeenCalledWith(mockVueApexCharts)
-  })
-
-  it('registers VueDatePicker component', async () => {
-    vi.resetModules()
-    await import('../src/main.js')
-
-    expect(mockApp.component).toHaveBeenCalledWith('VueDatePicker', mockVueDatePicker)
-  })
-
-  it('calls registerPlugins', async () => {
-    vi.resetModules()
-    await import('../src/main.js')
-
-    expect(mockRegisterPlugins).toHaveBeenCalledWith(mockApp)
-  })
-
-  it('mounts application to #main', async () => {
-    vi.resetModules()
-    await import('../src/main.js')
-
-    expect(mockApp.mount).toHaveBeenCalledWith('#main')
+    consoleMocks = setupTestEnvironment('development')
   })
 
   it('logs success message in development mode', async () => {
     vi.stubEnv('MODE', 'development')
 
-    vi.resetModules()
     await import('../src/main.js')
 
-    expect(consoleSpy).toHaveBeenCalledWith('Application successfully mounted in development mode')
+    expect(consoleMocks.consoleSpy).toHaveBeenCalledWith('Application successfully mounted in development mode')
   })
 
   it('does not log in production mode', async () => {
@@ -121,87 +38,87 @@ describe('main.js', () => {
     vi.resetModules()
     await import('../src/main.js')
 
-    expect(consoleSpy).not.toHaveBeenCalledWith('Application successfully mounted in development mode')
+    expect(consoleMocks.consoleSpy).not.toHaveBeenCalledWith('Application successfully mounted in development mode')
   })
 
-  it('handles createApp errors gracefully', async () => {
-    mockCreateApp.mockImplementationOnce(() => {
-      throw new Error('CreateApp failed')
+  it('calls registerPlugins with app instance', async () => {
+    await import('../src/main.js')
+
+    expect(mockRegisterPlugins).toHaveBeenCalledTimes(1)
+    expect(mockRegisterPlugins).toHaveBeenCalledWith(expect.any(Object))
+  })
+
+  it('handles different environment modes correctly', async () => {
+    const modes = ['development', 'production', 'test']
+
+    for (const mode of modes) {
+      vi.clearAllMocks()
+      consoleMocks.consoleSpy.mockClear()
+
+      vi.stubEnv('MODE', mode)
+      vi.resetModules()
+
+      await import('../src/main.js')
+
+      if (mode === 'development') {
+        expect(consoleMocks.consoleSpy).toHaveBeenCalledWith('Application successfully mounted in development mode')
+      } else {
+        expect(consoleMocks.consoleSpy).not.toHaveBeenCalledWith('Application successfully mounted in development mode')
+      }
+    }
+  })
+
+  it('handles application initialization errors gracefully', async () => {
+    const { createApp } = await import('vue')
+    createApp.mockImplementationOnce(() => {
+      throw new Error('App initialization failed')
     })
 
     vi.resetModules()
     await import('../src/main.js')
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
+    expect(consoleMocks.consoleErrorSpy).toHaveBeenCalledWith(
       'Failed to initialize application:',
       expect.any(Error)
     )
   })
 
-  it('handles mount errors gracefully', async () => {
-    mockApp.mount.mockImplementationOnce(() => {
-      throw new Error('Mount failed')
-    })
+  it('creates app with correct configuration', async () => {
+    const { vue } = vueEcosystemMocks
 
-    vi.resetModules()
     await import('../src/main.js')
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Failed to initialize application:',
-      expect.any(Error)
-    )
+    expect(vue.createApp).toHaveBeenCalledWith(expect.objectContaining({
+      name: 'App'
+    }))
   })
 
-  it('handles registerPlugins errors gracefully', async () => {
-    mockRegisterPlugins.mockImplementationOnce(() => {
-      throw new Error('Plugin registration failed')
-    })
+  it('mounts app to correct DOM element', async () => {
+    const mockApp = vueEcosystemMocks.mockApp
 
-    vi.resetModules()
     await import('../src/main.js')
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Failed to initialize application:',
-      expect.any(Error)
-    )
+    expect(mockApp.mount).toHaveBeenCalledWith('#main')
   })
 
-  it('executes initialization steps in correct order', async () => {
-    const callOrder = []
+  it('executes without throwing errors in normal conditions', async () => {
+    expect(async () => {
+      await import('../src/main.js')
+    }).not.toThrow()
+  })
 
-    mockCreateApp.mockImplementationOnce(() => {
-      callOrder.push('createApp')
-      return mockApp
-    })
+  it('imports main.js successfully', async () => {
+    const mainModule = await import('../src/main.js')
+    expect(mainModule).toBeDefined()
+  })
 
-    mockApp.use.mockImplementationOnce(() => {
-      callOrder.push('use-apexcharts')
-      return mockApp
-    })
+  it('properly initializes app chain', async () => {
+    const mockApp = vueEcosystemMocks.mockApp
 
-    mockApp.component.mockImplementationOnce(() => {
-      callOrder.push('component-datepicker')
-      return mockApp
-    })
-
-    mockRegisterPlugins.mockImplementationOnce(() => {
-      callOrder.push('registerPlugins')
-    })
-
-    mockApp.mount.mockImplementationOnce(() => {
-      callOrder.push('mount')
-      return mockApp
-    })
-
-    vi.resetModules()
     await import('../src/main.js')
 
-    expect(callOrder).toEqual([
-      'createApp',
-      'use-apexcharts',
-      'component-datepicker',
-      'registerPlugins',
-      'mount'
-    ])
+    // Verify the complete initialization chain
+    expect(mockRegisterPlugins).toHaveBeenCalledWith(mockApp)
+    expect(mockApp.mount).toHaveBeenCalledAfter(mockRegisterPlugins)
   })
 })

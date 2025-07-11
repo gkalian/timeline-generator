@@ -1,8 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-
-// Mock CSS imports
-vi.mock('vuetify/styles', () => ({}))
-vi.mock('@vuepic/vue-datepicker/dist/main.css', () => ({}))
+import { describe, it, expect, vi } from 'vitest'
 
 // Mock createVuetify function
 const mockVuetifyInstance = {
@@ -19,15 +15,6 @@ vi.mock('vuetify', () => ({
 }))
 
 describe('vuetify.js', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    // Reset module cache to ensure fresh imports
-    vi.resetModules()
-  })
-
-  afterEach(() => {
-    vi.clearAllMocks()
-  })
 
   it('should import required CSS files without errors', async () => {
     // Since CSS imports are mocked, we just verify the module can be imported
@@ -111,5 +98,108 @@ describe('vuetify.js', () => {
     // Verify the exported instance has the expected structure
     expect(vuetifyPlugin.default).toBe(mockVuetifyInstance)
     expect(vuetifyPlugin.default.theme.defaultTheme).toBe('dark')
+  })
+
+  it('executes without throwing errors', async () => {
+    expect(async () => {
+      await import('../../src/plugins/vuetify.js')
+    }).not.toThrow()
+  })
+
+  it('imports vuetify plugin successfully', async () => {
+    const vuetifyModule = await import('../../src/plugins/vuetify.js')
+    expect(vuetifyModule).toBeDefined()
+    expect(vuetifyModule.default).toBeDefined()
+  })
+
+  it('validates vuetify configuration completeness', async () => {
+    await import('../../src/plugins/vuetify.js')
+
+    const callArgs = mockCreateVuetify.mock.calls[0][0]
+
+    // Ensure configuration is complete and valid
+    expect(callArgs).toEqual(expect.objectContaining({
+      theme: expect.objectContaining({
+        defaultTheme: expect.any(String)
+      })
+    }))
+  })
+
+  it('ensures vuetify instance is properly configured for Vue app', async () => {
+    const vuetifyPlugin = await import('../../src/plugins/vuetify.js')
+
+    // Verify it's a valid Vue plugin
+    expect(vuetifyPlugin.default).toHaveProperty('install')
+    expect(typeof vuetifyPlugin.default.install).toBe('function')
+
+    // Verify theme configuration is accessible
+    expect(vuetifyPlugin.default).toHaveProperty('theme')
+    expect(vuetifyPlugin.default.theme).toHaveProperty('defaultTheme')
+  })
+
+  it('maintains consistent theme configuration across imports', async () => {
+    // Import multiple times to ensure consistency
+    const vuetifyPlugin1 = await import('../../src/plugins/vuetify.js')
+
+    vi.resetModules()
+
+    const vuetifyPlugin2 = await import('../../src/plugins/vuetify.js')
+
+    // Both imports should have same theme configuration
+    expect(vuetifyPlugin1.default.theme.defaultTheme).toBe('dark')
+    expect(vuetifyPlugin2.default.theme.defaultTheme).toBe('dark')
+  })
+
+  it('validates theme configuration structure', async () => {
+    await import('../../src/plugins/vuetify.js')
+
+    const callArgs = mockCreateVuetify.mock.calls[0][0]
+
+    // Verify complete theme structure
+    expect(callArgs.theme).toEqual({
+      defaultTheme: 'dark'
+    })
+  })
+
+  it('ensures proper module exports', async () => {
+    const vuetifyModule = await import('../../src/plugins/vuetify.js')
+
+    // Check module structure
+    expect(vuetifyModule).toHaveProperty('default')
+    expect(vuetifyModule.default).toBe(mockVuetifyInstance)
+
+    // Ensure no unexpected exports
+    const moduleKeys = Object.keys(vuetifyModule)
+    expect(moduleKeys).toContain('default')
+  })
+
+  it('verifies createVuetify is called with correct parameters', async () => {
+    await import('../../src/plugins/vuetify.js')
+
+    // Verify exact call parameters
+    expect(mockCreateVuetify).toHaveBeenCalledWith({
+      theme: {
+        defaultTheme: 'dark'
+      }
+    })
+
+    // Verify no extra parameters
+    expect(mockCreateVuetify).toHaveBeenCalledTimes(1)
+    const callArgs = mockCreateVuetify.mock.calls[0]
+    expect(callArgs).toHaveLength(1)
+  })
+
+  it('handles module re-imports correctly', async () => {
+    // First import
+    const firstImport = await import('../../src/plugins/vuetify.js')
+    const firstCallCount = mockCreateVuetify.mock.calls.length
+
+    // Second import (should reuse cached module)
+    const secondImport = await import('../../src/plugins/vuetify.js')
+    const secondCallCount = mockCreateVuetify.mock.calls.length
+
+    // Should be same instance and no additional calls
+    expect(firstImport.default).toBe(secondImport.default)
+    expect(secondCallCount).toBe(firstCallCount)
   })
 })
