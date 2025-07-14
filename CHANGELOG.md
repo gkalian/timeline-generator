@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/gkalian/timeline-generator/compare/v1.8.0...v1.8.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* update version to start from proper ([29b1c3b](https://github.com/gkalian/timeline-generator/commit/29b1c3b61b9683d0d7fed5533fb08500f8e5366f))
+
 # 1.8.0 (2025-07-14)
 
 
