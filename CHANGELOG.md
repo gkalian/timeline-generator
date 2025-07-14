@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/gkalian/timeline-generator/compare/v1.0.1...v1.0.2) (2025-07-14)
+
+
+### Bug Fixes
+
+* correct changelog after adding semrel ([f7a609f](https://github.com/gkalian/timeline-generator/commit/f7a609f81ae5637702b92613bd261269cc5de0dc))
+
 # 1.8.0 (2025-07-14)
 
 
