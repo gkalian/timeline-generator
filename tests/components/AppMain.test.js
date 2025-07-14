@@ -59,18 +59,13 @@ describe('AppMain.vue', () => {
     }
   })
 
-  it('renders main structure correctly', () => {
+  it('renders main structure with childs correctly', () => {
     wrapper = createWrapper()
 
     expectStandardComponentBehavior(wrapper)
     expect(wrapper.find('.v-container').exists()).toBe(true)
     expect(wrapper.find('.main-container').exists()).toBe(true)
     expect(wrapper.find('.header').exists()).toBe(true)
-  })
-
-  it('renders all child components', () => {
-    wrapper = createWrapper()
-
     expect(wrapper.find('[data-testid="input-fields-row"]').exists()).toBe(true)
     expect(wrapper.find('[data-testid="chart-header"]').exists()).toBe(true)
     expect(wrapper.find('[data-testid="chart-container"]').exists()).toBe(true)

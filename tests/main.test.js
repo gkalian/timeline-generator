@@ -24,31 +24,7 @@ describe('main.js', () => {
     consoleMocks = setupTestEnvironment('development')
   })
 
-  it('logs success message in development mode', async () => {
-    vi.stubEnv('MODE', 'development')
-
-    await import('../src/main.js')
-
-    expect(consoleMocks.consoleSpy).toHaveBeenCalledWith('Application successfully mounted in development mode')
-  })
-
-  it('does not log in production mode', async () => {
-    vi.stubEnv('MODE', 'production')
-
-    vi.resetModules()
-    await import('../src/main.js')
-
-    expect(consoleMocks.consoleSpy).not.toHaveBeenCalledWith('Application successfully mounted in development mode')
-  })
-
-  it('calls registerPlugins with app instance', async () => {
-    await import('../src/main.js')
-
-    expect(mockRegisterPlugins).toHaveBeenCalledTimes(1)
-    expect(mockRegisterPlugins).toHaveBeenCalledWith(expect.any(Object))
-  })
-
-  it('handles different environment modes correctly', async () => {
+  it('handles environment modes correctly', async () => {
     const modes = ['development', 'production', 'test']
 
     for (const mode of modes) {
@@ -68,6 +44,26 @@ describe('main.js', () => {
     }
   })
 
+  it('initializes app with correct configuration and chain', async () => {
+    const { vue } = vueEcosystemMocks
+    const mockApp = vueEcosystemMocks.mockApp
+
+    await import('../src/main.js')
+
+    // App creation
+    expect(vue.createApp).toHaveBeenCalledWith(expect.objectContaining({
+      name: 'App'
+    }))
+
+    // Plugin registration
+    expect(mockRegisterPlugins).toHaveBeenCalledTimes(1)
+    expect(mockRegisterPlugins).toHaveBeenCalledWith(mockApp)
+
+    // DOM mounting
+    expect(mockApp.mount).toHaveBeenCalledWith('#main')
+    expect(mockApp.mount).toHaveBeenCalledAfter(mockRegisterPlugins)
+  })
+
   it('handles application initialization errors gracefully', async () => {
     const { createApp } = await import('vue')
     createApp.mockImplementationOnce(() => {
@@ -83,42 +79,23 @@ describe('main.js', () => {
     )
   })
 
-  it('creates app with correct configuration', async () => {
-    const { vue } = vueEcosystemMocks
-
+  it('calls registerPlugins with app instance', async () => {
     await import('../src/main.js')
 
-    expect(vue.createApp).toHaveBeenCalledWith(expect.objectContaining({
-      name: 'App'
-    }))
+    expect(mockRegisterPlugins).toHaveBeenCalledTimes(1)
+    expect(mockRegisterPlugins).toHaveBeenCalledWith(expect.any(Object))
   })
 
-  it('mounts app to correct DOM element', async () => {
-    const mockApp = vueEcosystemMocks.mockApp
-
-    await import('../src/main.js')
-
-    expect(mockApp.mount).toHaveBeenCalledWith('#main')
-  })
-
-  it('executes without throwing errors in normal conditions', async () => {
+  it('imports and executes successfully', async () => {
     expect(async () => {
-      await import('../src/main.js')
+      const mainModule = await import('../src/main.js')
+      expect(mainModule).toBeDefined()
     }).not.toThrow()
   })
 
-  it('imports main.js successfully', async () => {
-    const mainModule = await import('../src/main.js')
-    expect(mainModule).toBeDefined()
-  })
-
-  it('properly initializes app chain', async () => {
-    const mockApp = vueEcosystemMocks.mockApp
-
-    await import('../src/main.js')
-
-    // Verify the complete initialization chain
-    expect(mockRegisterPlugins).toHaveBeenCalledWith(mockApp)
-    expect(mockApp.mount).toHaveBeenCalledAfter(mockRegisterPlugins)
+  it('renders without errors', async () => {
+    expect(async () => {
+      await import('../src/main.js')
+    }).not.toThrow()
   })
 })
