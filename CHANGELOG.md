@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/gkalian/timeline-generator/compare/v1.0.0...v1.0.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* delete old changelog.md ([272ea26](https://github.com/gkalian/timeline-generator/commit/272ea2634bdf1ea58bbba6e99278fa02b246ce16))
+
 # 1.0.0 (2025-07-14)
 
 
