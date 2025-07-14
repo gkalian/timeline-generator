@@ -1,6 +1,6 @@
 ## Changelog
 
-### v1.8.0
+### v1.7.1
   - remove unplugin-fonts (not supported by vite 7)
   - re-import Manrope font
   - remove tooltip and update labels styling

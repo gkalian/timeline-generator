@@ -13,6 +13,6 @@ export default defineConfig([
   },
   pluginVue.configs["flat/essential"],
   {
-    ignores: ["*.md", "**/dist", "**/node_modules", "**/fonts", "**.config.mjs"]
+    ignores: ["*.md", "**/dist", "**/node_modules", "**/fonts", "**.config.mjs", ".releaserc.js"]
   },
 ]);
