@@ -1,3 +1,17 @@
+# 1.0.0 (2025-07-14)
+
+
+### Bug Fixes
+
+* correct changelog after adding semrel ([f7a609f](https://github.com/gkalian/timeline-generator/commit/f7a609f81ae5637702b92613bd261269cc5de0dc))
+* delete old changelog.md ([272ea26](https://github.com/gkalian/timeline-generator/commit/272ea2634bdf1ea58bbba6e99278fa02b246ce16))
+* force to change version to proper ([08fba5b](https://github.com/gkalian/timeline-generator/commit/08fba5b428ab99a07c0d984a7b4a989e295cf08a))
+
+
+### Features
+
+* setup semantic release ([f9bfa45](https://github.com/gkalian/timeline-generator/commit/f9bfa457433cd3653892f9a8c89bb61175ff66fc))
+
 ## [1.0.2](https://github.com/gkalian/timeline-generator/compare/v1.0.1...v1.0.2) (2025-07-14)
 
 
