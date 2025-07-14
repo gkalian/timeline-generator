@@ -1,6 +1,6 @@
 {
   "name": "timeline-chart-generator",
-  "version": "1.7.1",
+  "version": "1.0.0",
   "scripts": {
     "start": "vite",
     "build": "vite build",
