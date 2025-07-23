@@ -8,7 +8,6 @@ import {
   expectStandardComponentBehavior,
 } from '../tests/setup/test-utils.js'
 
-// УБИРАЕМ vi.mock - используем только stubs
 describe('App.vue', () => {
   let wrapper
 
@@ -18,7 +17,7 @@ describe('App.vue', () => {
       global: {
         stubs: {
           ...getVuetifyStubs(),
-          // Только stubs для дочерних компонентов
+
           AppMain: {
             name: 'AppMain',
             template: '<div data-testid="app-main">AppMain Content</div>'
@@ -33,16 +32,13 @@ describe('App.vue', () => {
     })
   }
 
-  it('renders main app structure', () => {
+  it('renders complete app structure with all components', () => {
     wrapper = createWrapper()
 
     expectStandardComponentBehavior(wrapper)
+
     expect(wrapper.find('.v-application').exists()).toBe(true)
     expect(wrapper.find('.v-main').exists()).toBe(true)
-  })
-
-  it('renders child components', () => {
-    wrapper = createWrapper()
 
     expectComponentToExist(wrapper, 'app-main')
     expectComponentToExist(wrapper, 'app-footer')
