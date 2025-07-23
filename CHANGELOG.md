@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/gkalian/timeline-generator/compare/v1.8.1...v1.8.2) (2025-07-23)
+
+
+### Bug Fixes
+
+* minor test change ([9757677](https://github.com/gkalian/timeline-generator/commit/9757677374d527235bbcd38e84fd15095e3efdc9))
+
 ## [1.8.1](https://github.com/gkalian/timeline-generator/compare/v1.8.0...v1.8.1) (2025-07-14)
 
 
