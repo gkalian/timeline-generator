@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/gkalian/timeline-generator/compare/v1.8.2...v1.8.3) (2025-08-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency vuetify to v3.9.5 ([f38b1b1](https://github.com/gkalian/timeline-generator/commit/f38b1b18b005a5e21b3b592f2be352c71de60511))
+
 ## [1.8.2](https://github.com/gkalian/timeline-generator/compare/v1.8.1...v1.8.2) (2025-07-23)
 
 
