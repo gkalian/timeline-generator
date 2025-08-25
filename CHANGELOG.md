@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/gkalian/timeline-generator/compare/v1.8.3...v1.9.0) (2025-08-25)
+
+
+### Features
+
+* add helm chart ([e157d95](https://github.com/gkalian/timeline-generator/commit/e157d95300e85fef4ad7ccb1c3976d3a16f955be))
+
 ## [1.8.3](https://github.com/gkalian/timeline-generator/compare/v1.8.2...v1.8.3) (2025-08-17)
 
 
