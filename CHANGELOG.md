@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/gkalian/timeline-generator/compare/v1.9.0...v1.9.1) (2025-08-25)
+
+
+### Bug Fixes
+
+* delete file ([2dc0ed4](https://github.com/gkalian/timeline-generator/commit/2dc0ed4ff9443dd8522f0b3372758e9de801ad2b))
+
 # [1.9.0](https://github.com/gkalian/timeline-generator/compare/v1.8.3...v1.9.0) (2025-08-25)
 
 
