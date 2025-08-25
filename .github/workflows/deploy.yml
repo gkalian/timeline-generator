@@ -1,93 +1,66 @@
-# Workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Build And Publish Frontend Image
 
 on:
   push:
-    branches: ['main']
-  pull_request:
-    branches: ['main']
-  workflow_dispatch:
+    branches:
+      - main
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
+  packages: write
 
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
+  build:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Set up Node
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests with coverage
-        run: npm run test:coverage
 
-      - name: Build
-        run: npm run build
-      
-      - name: Release (update versions and changelog)
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
-      
-      - name: Add coverage data to dist
+
+      - name: Read version
+        id: version
         run: |
-          COVERAGE=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
-          COVERAGE_INT=$(printf "%.0f" $COVERAGE)
-          
-          if [ $COVERAGE_INT -ge 80 ]; then
-            COLOR="brightgreen"
-          elif [ $COVERAGE_INT -ge 60 ]; then
-            COLOR="yellow"
-          else
-            COLOR="red"
-          fi
-          
-          mkdir -p dist/coverage
-          
-          cat > dist/coverage/coverage.json << EOF
-          {
-            "schemaVersion": 1,
-            "label": "coverage",
-            "message": "${COVERAGE_INT}%",
-            "color": "$COLOR"
-          }
-          EOF
-          
-          echo "Coverage badge data added to dist/coverage/"
-      
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version $VERSION"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
         with:
-          path: './dist'
-      
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ steps.version.outputs.version }}

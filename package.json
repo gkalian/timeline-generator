@@ -25,6 +25,11 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/github": "^11.0.4",
+    "semantic-release": "^24.2.7",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vitest/coverage-v8": "^3.2.4",
     "@vue/test-utils": "^2.4.6",
@@ -35,7 +40,6 @@
     "prettier": "3.6.2",
     "sass": "^1.90.0",
     "sass-loader": "^16.0.5",
-    "semantic-release": "^24.2.7",
     "unplugin-vue-components": "^28.8.0",
     "vite": "^7.0.6",
     "vite-plugin-vuetify": "^2.1.2",
@@ -48,11 +52,22 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
+      [
+        "@semantic-release/changelog",
+        {
+          "changelogFile": "CHANGELOG.md"
+        }
+      ],
       [
         "@semantic-release/npm",
         {
           "npmPublish": false
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "\n          # Install yq if missed\n          if ! command -v yq &> /dev/null; then\n            wget -qO /tmp/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64\n            chmod +x /tmp/yq\n            YQ_CMD=\"/tmp/yq\"\n          else\n            YQ_CMD=\"yq\"\n          fi\n          \n          #  Update Chart.yaml with yq\n          $YQ_CMD eval '.version = \"${nextRelease.version}\"' -i helm/Chart.yaml\n          $YQ_CMD eval '.appVersion = \"${nextRelease.version}\"' -i helm/Chart.yaml\n          "
         }
       ],
       [
@@ -61,11 +76,13 @@
           "assets": [
             "package.json",
             "package-lock.json",
-            "CHANGELOG.md"
+            "CHANGELOG.md",
+            "helm/Chart.yaml"
           ],
-          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+          "message": "hore(release): ${nextRelease.version} [skip ci]"
         }
-      ]
+      ],
+      "@semantic-release/github"
     ]
   }
 }
