@@ -1,0 +1,10 @@
+app:
+  name: ""
+  version: ""
+
+image:
+  repository: ""
+  tag: ""
+
+service:
+  type: ""  
