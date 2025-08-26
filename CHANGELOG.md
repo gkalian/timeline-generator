@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/gkalian/timeline-generator/compare/v1.9.2...v1.9.3) (2025-08-26)
+
+
+### Bug Fixes
+
+* update libraries ([64f24d1](https://github.com/gkalian/timeline-generator/commit/64f24d17566d775b844ec0c61639a8e85c39f5e8))
+
 ## [1.9.2](https://github.com/gkalian/timeline-generator/compare/v1.9.1...v1.9.2) (2025-08-25)
 
 
