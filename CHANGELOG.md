@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/gkalian/timeline-generator/compare/v1.9.3...v1.9.4) (2025-09-07)
+
+
+### Bug Fixes
+
+* publish helm chart in registry ([c51ca64](https://github.com/gkalian/timeline-generator/commit/c51ca640fb93ed1db5e9c38d07d7db44f1c0daf7))
+
 ## [1.9.3](https://github.com/gkalian/timeline-generator/compare/v1.9.2...v1.9.3) (2025-08-26)
 
 
