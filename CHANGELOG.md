@@ -1,3 +1,10 @@
+## [1.9.6](https://github.com/gkalian/timeline-generator/compare/v1.9.5...v1.9.6) (2025-09-07)
+
+
+### Bug Fixes
+
+* update tag in values ([f03ee46](https://github.com/gkalian/timeline-generator/commit/f03ee46b5a99e6ed9052a0e1ed9233b0f71279ca))
+
 ## [1.9.5](https://github.com/gkalian/timeline-generator/compare/v1.9.4...v1.9.5) (2025-09-07)
 
 
