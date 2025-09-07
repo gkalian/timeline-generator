@@ -1,10 +1,38 @@
-app:
-  name: ""
-  version: ""
+replicaCount: 1
 
 image:
-  repository: ""
-  tag: ""
+  repository: ghcr.io/gkalian/timeline-generator
+  pullPolicy: IfNotPresent
+  tag: "latest"
 
 service:
-  type: ""  
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: example-tls
+      hosts:
+        - example.com 
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
