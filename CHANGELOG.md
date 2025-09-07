@@ -1,3 +1,10 @@
+## [1.9.5](https://github.com/gkalian/timeline-generator/compare/v1.9.4...v1.9.5) (2025-09-07)
+
+
+### Bug Fixes
+
+* added basic values ([3f44d16](https://github.com/gkalian/timeline-generator/commit/3f44d1615771157112b47cb76ea3610ce567795b))
+
 ## [1.9.4](https://github.com/gkalian/timeline-generator/compare/v1.9.3...v1.9.4) (2025-09-07)
 
 
