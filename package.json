@@ -17,7 +17,7 @@
     "apexcharts": "^5.3.6",
     "vue": "^3.5.26",
     "vue3-apexcharts": "^1.10.0",
-    "vuetify": "^3.11.4"
+    "vuetify": "^3.11.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
