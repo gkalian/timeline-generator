@@ -1,3 +1,11 @@
+# Changelog
+
+## [1.9.7](https://github.com/gkalian/timeline-generator/compare/v1.9.6...v1.9.7) (2026-05-20)
+
+### Bug Fixes
+
+* move to release it ([ecfc437](https://github.com/gkalian/timeline-generator/commit/ecfc4374edd7e5e50705705f2fe1898e5cf6cf9c))
+
 ## [1.9.6](https://github.com/gkalian/timeline-generator/compare/v1.9.5...v1.9.6) (2025-09-07)
 
 
