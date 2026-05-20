@@ -1,5 +1,7 @@
 # Changelog
 
+## [1.9.9](https://github.com/gkalian/timeline-generator/compare/v1.9.8...v1.9.9) (2026-05-20)
+
 ## [1.9.8](https://github.com/gkalian/timeline-generator/compare/v1.9.7...v1.9.8) (2026-05-20)
 
 ### Bug Fixes
