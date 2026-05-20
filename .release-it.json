@@ -1,0 +1,32 @@
+{
+  "npm": {
+    "publish": false
+  },
+  "git": {
+    "commitMessage": "chore(release): ${version} [skip ci]",
+    "tagName": "v${version}",
+    "requireCleanWorkingDir": false,
+    "commit": true,
+    "tag": true,
+    "push": true
+  },
+  "github": {
+    "release": true,
+    "releaseName": "v${version}"
+  },
+  "hooks": {
+    "after:bump": [
+      "if ! command -v yq &>/dev/null; then wget -qO /tmp/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && chmod +x /tmp/yq && YQ=/tmp/yq; else YQ=yq; fi && $YQ eval '.version = \"${version}\"' -i helm/Chart.yaml && $YQ eval '.appVersion = \"${version}\"' -i helm/Chart.yaml",
+      "npm install --package-lock-only --ignore-scripts",
+      "git add helm/Chart.yaml package-lock.json"
+    ]
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "conventionalcommits"
+      },
+      "infile": "CHANGELOG.md"
+    }
+  }
+}
