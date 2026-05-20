@@ -13,7 +13,7 @@ import App from "./App.vue";
 // Plugins
 import { registerPlugins } from "@/plugins";
 import VueApexCharts from "vue3-apexcharts";
-import VueDatePicker from "@vuepic/vue-datepicker";
+import { VueDatePicker } from "@vuepic/vue-datepicker";
 
 // Global styles
 import "./styles/main.css";

@@ -29,7 +29,7 @@
  * @description Custom date picker component that allows selecting month and year
  */
 import { ref, watch } from "vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
+import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 export default {
