@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.9.8](https://github.com/gkalian/timeline-generator/compare/v1.9.7...v1.9.8) (2026-05-20)
+
+### Bug Fixes
+
+* proper import ([eec1701](https://github.com/gkalian/timeline-generator/commit/eec1701e04e14e55960ed436c1dcddb3df6b0115))
+
 ## [1.9.7](https://github.com/gkalian/timeline-generator/compare/v1.9.6...v1.9.7) (2026-05-20)
 
 ### Bug Fixes
