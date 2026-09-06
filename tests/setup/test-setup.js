@@ -10,7 +10,7 @@ vi.mock('vue3-apexcharts', () => ({
   default: { name: 'VueApexCharts' }
 }))
 vi.mock('@vuepic/vue-datepicker', () => ({
-  default: {
+  VueDatePicker: {
     name: 'VueDatePicker',
     template: `
       <div
