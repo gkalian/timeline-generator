@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.10](https://github.com/gkalian/timeline-generator/compare/v1.9.9...v1.9.10) (2026-09-06)
+
+### Bug Fixes
+
+* add scrollbar for the generated chart ([e8830a6](https://github.com/gkalian/timeline-generator/commit/e8830a66786e07f6f20a82791c3ab2d601114c20))
+* update tests and libs ([90f5466](https://github.com/gkalian/timeline-generator/commit/90f5466cd0e391d02d7f8243acf94afbe609fa6b))
+* update ui and ccs for chart container ([930d33c](https://github.com/gkalian/timeline-generator/commit/930d33c20dc5dff0bf0cbd586d8c61f45fe7e182))
+
 ## [1.9.9](https://github.com/gkalian/timeline-generator/compare/v1.9.8...v1.9.9) (2026-05-20)
 
 ## [1.9.8](https://github.com/gkalian/timeline-generator/compare/v1.9.7...v1.9.8) (2026-05-20)
