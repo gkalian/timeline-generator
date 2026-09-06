@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chart-container-root">
     <v-row v-show="showNewRow">
       <v-col cols="12" class="d-flex justify-start">
         <ChartSettings
@@ -157,8 +157,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.chart-container-root {
+  min-width: 0;
+  width: 100%;
+}
+
 .chart-wrapper {
   width: 100%;
+  min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 5px;
@@ -170,8 +176,5 @@ export default defineComponent({
   height: auto;
   padding-left: 5px;
   padding-right: 5px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
 }
 </style>
