@@ -155,3 +155,23 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 5px;
+  justify-content: center;
+}
+
+.chart-element {
+  min-width: 100%;
+  height: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+</style>
