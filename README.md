@@ -27,6 +27,6 @@ A simple timeline chart generator built using the **Apex Chart** and **Vuepic/vu
 - Install dependencies `npm install`
 - Run locally `npm run start`
 
-## [Changelog](./changelog.md)
+## [Changelog](./CHANGELOG.md)
 
 ## [License](./LICENSE)
